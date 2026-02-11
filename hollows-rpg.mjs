@@ -103,7 +103,7 @@ Hooks.once("ready", async function () {
   // Wait to register hotbar drop hook on ready so that modules could register earlier if they want to
   Hooks.on("hotbarDrop", (bar, data, slot) => {
     if (data.type === "Item") {
-      helpers.macros.createDocMacro(data, slot);
+      //helpers.macros.createDocMacro(data, slot);
       return false;
     }
   });
