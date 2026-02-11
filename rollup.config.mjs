@@ -23,12 +23,4 @@ export default [{
     assetFileNames: "hollows-rpg-variables.css",
   },
   plugins: [css()],
-}, {
-  input: "./styles/elements/_elements.mjs",
-  output: {
-    file: "./public/css/hollows-rpg-elements.mjs",
-    format: "esm",
-    assetFileNames: "hollows-rpg-elements.css",
-  },
-  plugins: [css()],
 }];
