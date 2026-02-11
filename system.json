@@ -46,7 +46,8 @@
   "esmodules": ["hollows-rpg.mjs"],
   "styles": [
     { "src": "css/hollows-rpg-system.css", "layer": "system" },
-    { "src": "css/hollows-rpg-variables.css", "layer": "variables" }
+    { "src": "css/hollows-rpg-variables.css", "layer": "variables" },
+    { "src": "css/hollows-rpg-elements.css", "layer": "elements" }
   ],
   "languages": [
     {
