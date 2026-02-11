@@ -100,7 +100,6 @@ jobs:
         mv --force public/hollows-rpg.mjs hollows-rpg.mjs
         mv --force public/hollows-rpg.mjs.map hollows-rpg.mjs.map
         mv --force public/css/hollows-rpg-system.css css/hollows-rpg-system.css
-        mv --force public/css/hollows-rpg-elements.css css/hollows-rpg-elements.css
         mv --force public/css/hollows-rpg-variables.css css/hollows-rpg-variables.css
 
 
