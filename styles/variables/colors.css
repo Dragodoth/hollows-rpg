@@ -1,0 +1,26 @@
+/* CSS variables go here */
+:root, .application.hollows-rpg.themed.theme-light {
+  --hollows-rpg-c-dark: #191813;
+  --hollows-rpg-c-faint: #c9c7b8;
+  --hollows-rpg-c-beige: #b5b3a4;
+  --hollows-rpg-c-tan: #444444;
+  --hollows-rpg-c-white: #ffffff;
+  --hollows-rpg-c-black: #000000;
+  --hollows-rpg-c-groove: #eeede0;
+  --hollows-rpg-c-success: green;
+  --hollows-rpg-c-failure: red;
+  --hollows-rpg-c-item-header-bg: #bebbab;
+  --hollows-rpg-c-item-alternating-bg: rgba(0, 0, 0, .05);
+}
+
+.theme-dark, .application.hollows-rpg.themed.theme-dark {
+  --hollows-rpg-c-dark: #c9c7b8;
+  --hollows-rpg-c-faint: #191813;
+  --hollows-rpg-c-beige: #444444;
+  --hollows-rpg-c-tan: #b5b3a4;
+  --hollows-rpg-c-white: #000000;
+  --hollows-rpg-c-black: #ffffff;
+  --hollows-rpg-c-groove: #11121f;
+  --hollows-rpg-c-item-header-bg: #28232f;
+  --hollows-rpg-c-item-alternating-bg: rgba(255, 255, 255, .05);
+}

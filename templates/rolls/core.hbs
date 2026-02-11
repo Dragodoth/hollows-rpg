@@ -1,0 +1,21 @@
+
+<div class="dice-roll" data-action="expandRoll">
+  {{#if flavor}}
+  <div class="dice-flavor">{{flavor}}</div>
+  {{/if}}
+  {{#if target}}
+  <div class="header" data-uuid="{{target.uuid}}">
+    {{target.name}}
+  </div>
+  {{/if}}
+  <div class="result {{result.class}}">
+    {{result.label}}
+  </div>
+  <div class="dice-result" data-tooltip-text="{{formula}}">
+    <div class="inline-result">
+      <div class="dice-formula">{{flavorlessFormula}}</div>
+      <div class="dice-total {{critical}}">{{total}}</div>
+    </div>
+    {{{tooltip}}}
+  </div>
+</div>

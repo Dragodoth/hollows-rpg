@@ -1,0 +1,1 @@
+export { default as BaseMessageModel } from "./base.mjs";

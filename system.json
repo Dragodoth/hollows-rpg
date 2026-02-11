@@ -1,0 +1,58 @@
+{
+  "id": "hollows-rpg",
+  "title": "Hollows RPG",
+  "description": "The Hollows RPG system for FoundryVTT!",
+  "authors": [
+    {
+      "name": "Dragodoth",
+      "discord": "dragodoth"
+    }
+  ],
+  "documentTypes": {
+    "Actor": {
+      "hunter": {
+        "htmlFields": ["biography.value", "biography.director"],
+        "gmOnlyFields": ["biography.director"]
+      },
+      "npc": {
+        "htmlFields": ["biography.value", "biography.director"],
+        "gmOnlyFields": ["biography.director"]
+      }
+    }
+  },
+  "url": "Replace this with a link to your public repository",
+  "license": "LICENSE.txt",
+  "readme": "README.md",
+  "bugs": "Replace this with a link to file issues or tickets",
+  "changelog": "CHANGELOG.md",
+  "media": [
+    {
+      "type": "setup",
+      "url": "systems/hollows-rpg/assets/anvil-impact.png",
+      "thumbnail": "systems/hollows-rpg/assets/anvil-impact.png"
+    }
+  ],
+  "version": "0.0.1",
+  "compatibility": {
+    "minimum": 13,
+    "verified": "13.351"
+  },
+  "esmodules": ["hollows-rpg.mjs"],
+  "styles": [
+    { "src": "css/hollows-rpg-system.css", "layer": "system" },
+    { "src": "css/hollows-rpg-variables.css", "layer": "variables" },
+    { "src": "css/hollows-rpg-elements.css", "layer": "elements" }
+  ],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    }
+  ],
+  "packs": [],
+  "packFolders": [],
+  "socket": false,
+  "manifest": "Replace this with a link to the /latest release system.json so people can receive updates after they've installed the system",
+  "download": "This must link to a .zip file of the current version"
+}

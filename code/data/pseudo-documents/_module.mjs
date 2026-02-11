@@ -1,0 +1,1 @@
+export { default as PseudoDocument } from "./pseudo-document.mjs";

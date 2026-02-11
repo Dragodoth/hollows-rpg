@@ -203,7 +203,7 @@ async function extractPacks(packName, entryName) {
   entryName = entryName?.toLowerCase();
 
   // Load package manifest.
-  const manifest = JSON.parse(fs.readFileSync("./<module|system>.json", { encoding: "utf8" }));
+  const manifest = JSON.parse(fs.readFileSync("./system.json", { encoding: "utf8" }));
 
   // Determine which source packs to process.
   const packs = manifest.packs.filter(p => !packName || (p.name === packName));

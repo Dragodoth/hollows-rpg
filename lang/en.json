@@ -1,3 +1,108 @@
 {
-  "<REPLACE_ME>": {}
+  "HOLLOWS_RPG": {
+    "Actor": {
+      "Stat": {
+        "strong": "Strong",
+        "hard": "Hard",
+        "quick": "Quick",
+        "sharp": "Sharp",
+        "wise": "Wise"
+      },
+      "Health":{
+        "Resolve": "Resolve",
+        "Wounds": "Wounds"
+      },
+      "Tabs":{
+        "weapons": "Weapons",
+        "features": "Features",
+        "equipment": "Equipment",
+        "echoes": "Echoes",
+        "effects": "Effects",
+        "biography": "Biography"
+      },
+      "hunter": {
+        "Fields": {
+          "targetNumber":{
+            "label": "Target Number"
+          },
+          "stats": {
+            "label":"Choose a Stat to roll:"
+          },
+          "useTargetNumber": {
+            "label": "Use Target Number?"
+          }
+        }
+      }
+    },
+    "SheetLabels": {
+      "Actor": "HollowsRPG Actor Sheet",
+      "Item": "HollowsRPG Item Sheet"
+    },
+    "Item": {
+      "Spell": {
+        "SpellLVL": "Level {level} Spells",
+        "AddLVL": "Add LVL {level}"
+      }
+    },
+    "Effect": {
+      "Source": "Source",
+      "Toggle": "Toggle Effect",
+      "Temporary": "Temporary Effects",
+      "Passive": "Passive Effects",
+      "Inactive": "Inactive Effects",
+      "Broken": "Broken",
+      "Dying": "Dying"
+    },
+    "Roll": {
+      "Types":{
+        "Attack": "Attack",
+        "Defend": "Defend",
+        "Explore": "Explore"
+      },
+      "Results":{
+        "Success": "Success",
+        "SuperiorSuccess": "Superior Success",
+        "CriticalSuccess": "Critical Success",
+        "Failure": "Failure",
+        "CriticalFailure": "Critical Failure"
+      },
+      "Prompt": "Roll {prompt}",
+      "Advantage": "Advantage",
+      "Disadvantage": "Disadvantage",
+      "Core": {
+        "Prompt": {
+          "Title": "{typeLabel} Roll",
+          "tnError": "The Target Number must be between 1 and 20!"
+        }
+      }
+    },
+    "Sheet": {
+      "Labels": {
+        "Character": "Draw Steel Character Sheet",
+        "NPC": "Draw Steel NPC Sheet",
+        "Item": "Draw Steel Item Sheet",
+        "ActiveEffect": "Draw Steel Active Effect Config",
+        "CombatantGroup": "Draw Steel Combatant Group Config",
+        "WallDocument": "Draw Steel Wall Config"
+      },
+      "Add": "+ Add {itemName}",
+      "NoDocument": "No {documentName}",
+      "Play": "Play",
+      "View": "View",
+      "Edit": "Edit",
+      "Share": "Share",
+      "Delete": "Delete",
+      "Resources": "Resources",
+      "EditCharacteristics": "Edit Characteristics",
+      "Other": "Other",
+      "LevelUp": "Level Up Available",
+      "ToggleMode": "Toggle Play/Edit Mode"
+    }
+  },
+  "TYPES": {
+    "Actor": {
+      "hunter": "Hunter",
+      "npc": "NPC"
+    }
+  }
 }
