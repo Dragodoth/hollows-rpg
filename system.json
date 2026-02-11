@@ -20,10 +20,16 @@
       }
     }
   },
-  "url": "Replace this with a link to your public repository",
-  "license": "LICENSE.txt",
+  "flags": {
+    "hotReload": {
+      "extensions": ["css", "html", "hbs", "json"],
+      "paths": ["css", "src/styles", "lang", "templates"]
+    }
+  },
+  "url": "https://github.com/Dragodoth/hollows-rpg",
+  "license": "LICENSE.md",
   "readme": "README.md",
-  "bugs": "Replace this with a link to file issues or tickets",
+  "bugs": "https://github.com/Dragodoth/hollows-rpg/issues",
   "changelog": "CHANGELOG.md",
   "media": [
     {
