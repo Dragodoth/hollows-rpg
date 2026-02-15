@@ -34,7 +34,7 @@
   "flags": {
     "hotReload": {
       "extensions": ["css", "html", "hbs", "json"],
-      "paths": ["css", "styles", "lang", "templates"]
+      "paths": ["css", "src/styles", "lang", "templates"]
     }
   },
   "url": "https://github.com/Dragodoth/hollows-rpg",
