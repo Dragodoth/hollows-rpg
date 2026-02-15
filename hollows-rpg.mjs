@@ -1,13 +1,13 @@
-import * as applications from "./code/applications/_module.mjs";
-import * as canvas from "./code/canvas/_module.mjs";
-import * as config from "./code/config.mjs";
-import * as data from "./code/data/_module.mjs";
-import * as documents from "./code/documents/_module.mjs";
-import * as helpers from "./code/helpers/_module.mjs";
-import * as rolls from "./code/rolls/_module.mjs";
-import * as utils from "./code/utils/_module.mjs";
-import * as HOLLOWS_CONFIG from "./code/config.mjs";
-import * as HOLLOWS_CONST from "./code/constants.mjs";
+import * as applications from "./src/applications/_module.mjs";
+import * as canvas from "./src/canvas/_module.mjs";
+import * as config from "./src/config.mjs";
+import * as data from "./src/data/_module.mjs";
+import * as documents from "./src/documents/_module.mjs";
+import * as helpers from "./src/helpers/_module.mjs";
+import * as rolls from "./src/rolls/_module.mjs";
+import * as utils from "./src/utils/_module.mjs";
+import * as HOLLOWS_CONFIG from "./src/config.mjs";
+import * as HOLLOWS_CONST from "./src/constants.mjs";
 
 globalThis.hollows = {
   applications,

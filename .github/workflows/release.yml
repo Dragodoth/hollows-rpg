@@ -124,7 +124,7 @@ jobs:
             "${{ env.PACKAGE_TYPE }}.json",
             ...(manifest.esmodules ?? []),
             ...(manifest.esmodules?.map(s => `${s}.map`) ?? []),
-            ...(manifest.styles?.map(s => s.code) ?? []),
+            ...(manifest.styles?.map(s => s.src) ?? []),
             ...(manifest.languages?.map(l => l.path) ?? []),
             ...(manifest.includes ?? [])
           ];

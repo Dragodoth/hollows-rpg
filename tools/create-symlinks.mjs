@@ -23,7 +23,7 @@ if (fs.existsSync("foundry-config.yaml")) {
   try {
     await fs.promises.mkdir("foundry");
   } catch (e) {
-    if (e.code !== "EEXIST") throw e;
+    if (e.src !== "EEXIST") throw e;
   }
 
   // Javascript files
@@ -31,7 +31,7 @@ if (fs.existsSync("foundry-config.yaml")) {
     try {
       await fs.promises.symlink(path.join(fileRoot, p), path.join("foundry", p));
     } catch (e) {
-      if (e.code !== "EEXIST") throw e;
+      if (e.src !== "EEXIST") throw e;
     }
   }
 
@@ -39,7 +39,7 @@ if (fs.existsSync("foundry-config.yaml")) {
   try {
     await fs.promises.symlink(path.join(fileRoot, "public", "lang"), path.join("foundry", "lang"));
   } catch (e) {
-    if (e.code !== "EEXIST") throw e;
+    if (e.src !== "EEXIST") throw e;
   }
 } else {
   console.log("Foundry config file did not exist.");
