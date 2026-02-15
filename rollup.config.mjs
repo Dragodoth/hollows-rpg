@@ -8,7 +8,7 @@ export default [{
     sourcemap: true,
   },
 }, {
-  input: "./styles/system/_system.mjs",
+  input: "./code/styles/system/_system.mjs",
   output: {
     file: "./public/css/hollows-rpg-system.mjs",
     format: "esm",
@@ -16,7 +16,7 @@ export default [{
   },
   plugins: [css()],
 }, {
-  input: "./styles/variables/_variables.mjs",
+  input: "./code/styles/variables/_variables.mjs",
   output: {
     file: "./public/css/hollows-rpg-variables.mjs",
     format: "esm",
@@ -24,7 +24,7 @@ export default [{
   },
   plugins: [css()],
 }, {
-  input: "./styles/elements/_elements.mjs",
+  input: "./code/styles/elements/_elements.mjs",
   output: {
     file: "./public/css/hollows-rpg-elements.mjs",
     format: "esm",
