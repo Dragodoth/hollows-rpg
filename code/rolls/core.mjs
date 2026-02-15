@@ -54,15 +54,15 @@ export default class CoreRoll extends HOLLOWSRoll {
   /** @enum {{label: string; icon: string}} */
   static #TYPES = Object.freeze({
     attack: {
-      label: "HOLLOWS_RPG.Roll.Types.Attack",
+      label: "HOLLOWS_RPG.ROLL.Core.Types.Attack",
       icon: "fa-solid fa-bolt",
     },
     defend: {
-      label: "HOLLOWS_RPG.Roll.Types.Defend",
+      label: "HOLLOWS_RPG.ROLL.Core.Types.Defend",
       icon: "fa-solid fa-shield",
     },
     explore: {
-      label: "HOLLOWS_RPG.Roll.Types.Explore",
+      label: "HOLLOWS_RPG.ROLL.Core.Types.Explore",
       icon: "fa-solid fa-dice",
     }
   });
@@ -101,19 +101,19 @@ export default class CoreRoll extends HOLLOWSRoll {
   /** @enum {{label: string; threshold: number}} */
   static #RESULTS = {
     success: {
-      label: "HOLLOWS_RPG.Roll.Results.Success"
+      label: "HOLLOWS_RPG.ROLL.Core.Results.Success"
     },
     superiorSuccess: {
-      label: "HOLLOWS_RPG.Roll.Results.SuperiorSuccess"
+      label: "HOLLOWS_RPG.ROLL.Core.Results.SuperiorSuccess"
     },
     criticalSuccess: {
-      label: "HOLLOWS_RPG.Roll.Results.CriticalSuccess"
+      label: "HOLLOWS_RPG.ROLL.Core.Results.CriticalSuccess"
     },
     failure: {
-      label: "HOLLOWS_RPG.Roll.Results.Failure"
+      label: "HOLLOWS_RPG.ROLL.Core.Results.Failure"
     },
     criticalFailure: {
-      label: "HOLLOWS_RPG.Roll.Results.CriticalFailure"
+      label: "HOLLOWS_RPG.ROLL.Core.Results.CriticalFailure"
     }
   };
 
@@ -157,7 +157,7 @@ export default class CoreRoll extends HOLLOWSRoll {
     const promptValue = await hollows.applications.apps.CoreRollDialog.create({
       context,
       window: {
-        title: game.i18n.format("HOLLOWS_RPG.Roll.Core.Prompt.Title", {typeLabel}),
+        title: game.i18n.format("HOLLOWS_RPG.ROLL.Core.Prompt.Title", {typeLabel}),
       },
     });
     if (!promptValue) return null;

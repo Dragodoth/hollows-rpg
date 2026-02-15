@@ -104,7 +104,7 @@ export default class HollowsDocumentSheet extends api.HandlebarsApplicationMixin
     const buttons = [constructHTMLButton({
       label: "",
       classes: ["header-control", "icon", "fa-solid", "fa-user-lock"],
-      dataset: { action: "toggleMode", tooltip: "HOLLOWS_RPG.Sheet.ToggleMode" },
+      dataset: { action: "toggleMode", tooltip: "HOLLOWS_RPG.SHEET.ToggleMode" },
     })];
 
     if (this.document.system.source) {
@@ -475,7 +475,7 @@ export default class HollowsDocumentSheet extends api.HandlebarsApplicationMixin
   /* -------------------------------------------- */
 
   /**
-   * Handle a dropped document on the Document Sheet.
+   * Handle a dropped document on the Document SHEET.
    * @template {Document} TDocument
    * @param {DragEvent} event           The initiating drop event.
    * @param {TDocument} document        The resolved Document instance.
@@ -557,7 +557,7 @@ export default class HollowsDocumentSheet extends api.HandlebarsApplicationMixin
   /* -------------------------------------------- */
 
   /**
-   * Handle a dropped PseudoDocument on the Document Sheet.
+   * Handle a dropped PseudoDocument on the Document SHEET.
    * @template {PseudoDocument} TDocument
    * @param {DragEvent} event           The initiating drop event.
    * @param {TDocument} pseudo          The resolved PseudoDocument instance.

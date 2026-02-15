@@ -70,14 +70,13 @@ export default class HollowsRPGActorSheet extends HollowsDocumentSheet {
   static TABS = {
     primary: {
       tabs: [
-        { id: "weapons" },
-        { id: "features" },
+        { id: "abilities" },
         { id: "equipment" },
         { id: "echoes" },
         { id: "effects" },
         { id: "biography" },
       ],
-      initial: "weapons",
+      initial: "abilities",
       labelPrefix: "HOLLOWS_RPG.Actor.Tabs",
     },
   };
@@ -140,7 +139,6 @@ export default class HollowsRPGActorSheet extends HollowsDocumentSheet {
       }
 
       if (this.actor.type !== "hunter") {
-        delete tabs.weapons;
         delete tabs.equipment;
         delete tabs.echoes;
       }
@@ -155,14 +153,8 @@ export default class HollowsRPGActorSheet extends HollowsDocumentSheet {
   async _preparePartContext(partId, context, options) {
     await super._preparePartContext(partId, context, options);
     switch (partId) {
-      case "weapons":
-        break;
-      case "features":
-        context.features = await this._prepareFeaturesContext();
-        context.featureFields = FeatureModel.schema.fields;
-        break;
-      case "equipment":
-
+      case "header":
+        context.avatarProperties = this._prepareAvatarCSS();
         break;
       case "biography":
         context.enrichedBiography = await enrichHTML(this.actor.system.biography.value, { relativeTo: this.actor });
@@ -175,6 +167,20 @@ export default class HollowsRPGActorSheet extends HollowsDocumentSheet {
     }
     if (partId in context.tabs) context.tab = context.tabs[partId];
     return context;
+  }
+
+  /* -------------------------------------------------- */
+
+  /**
+   * Prepare avatar adjustments context.
+   * @returns {object}
+   */
+  _prepareAvatarCSS() {
+    const { objectFit, objectPosition } = this.document.getFlag(hollows.CONST.systemID, "avatarProperties") ?? {};
+    return {
+      objectFit: CSS.supports("object-fit", objectFit) ? objectFit : null,
+      objectPosition: CSS.supports("object-position", objectPosition) ? objectPosition : null,
+    };
   }
 
   /* -------------------------------------------------- */
@@ -206,28 +212,6 @@ export default class HollowsRPGActorSheet extends HollowsDocumentSheet {
 
     // only generate the item embed when it's expanded
     if (context.expanded) context.embed = await item.system.toEmbed({ includeName: false });
-
-    return context;
-  }
-
-  /* -------------------------------------------------- */
-
-  /**
-   * Prepare the context for features.
-   * @returns {Array<ActorSheetItemContext>}
-   * @protected
-   */
-  async _prepareFeaturesContext() {
-    const features = [
-      ...this.actor.itemTypes.feature,
-    ].sort((a, b) => a.sort - b.sort);
-    const context = [];
-
-    for (const feature of features) {
-      const featureContext = await this._prepareItemContext(feature);
-      featureContext.typeLabel = CONFIG.Item.typeLabels[feature.type];
-      context.push(featureContext);
-    }
 
     return context;
   }
@@ -413,7 +397,7 @@ export default class HollowsRPGActorSheet extends HollowsDocumentSheet {
       },
       // All applicable options
       {
-        name: "HOLLOWS_RPG.Sheet.View",
+        name: "HOLLOWS_RPG.SHEET.View",
         icon: "<i class=\"fa-solid fa-fw fa-eye\"></i>",
         condition: () => this.isPlayMode,
         callback: async (target) => {
@@ -422,7 +406,7 @@ export default class HollowsRPGActorSheet extends HollowsDocumentSheet {
         },
       },
       {
-        name: "HOLLOWS_RPG.Sheet.Edit",
+        name: "HOLLOWS_RPG.SHEET.Edit",
         icon: "<i class=\"fa-solid fa-fw fa-edit\"></i>",
         condition: () => this.isEditMode,
         callback: async (target) => {
@@ -431,7 +415,7 @@ export default class HollowsRPGActorSheet extends HollowsDocumentSheet {
         },
       },
       {
-        name: "HOLLOWS_RPG.Sheet.Share",
+        name: "HOLLOWS_RPG.SHEET.Share",
         icon: "<i class=\"fa-solid fa-fw fa-share-from-square\"></i>",
         callback: async (target) => {
           const document = this._getEmbeddedDocument(target);
@@ -446,7 +430,7 @@ export default class HollowsRPGActorSheet extends HollowsDocumentSheet {
         },
       },
       {
-        name: "HOLLOWS_RPG.Sheet.Delete",
+        name: "HOLLOWS_RPG.SHEET.Delete",
         icon: "<i class=\"fa-solid fa-fw fa-trash\"></i>",
         condition: () => this.actor.isOwner,
         callback: async (target) => {
@@ -763,7 +747,7 @@ export default class HollowsRPGActorSheet extends HollowsDocumentSheet {
   /* -------------------------------------------------- */
 
   /**
-   * Handle a dropped Folder on the Actor Sheet.
+   * Handle a dropped Folder on the Actor SHEET.
    * @param {DragEvent} event     The initiating drop event.
    * @param {Folder} folder       The dropped Folder document.
    * @returns {Promise<Folder|null|undefined>} A Promise resolving to the dropped Folder indicate success, or a nullish

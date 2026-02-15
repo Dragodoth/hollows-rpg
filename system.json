@@ -14,16 +14,27 @@
         "htmlFields": ["biography.value", "biography.director"],
         "gmOnlyFields": ["biography.director"]
       },
-      "npc": {
+      "entity": {
         "htmlFields": ["biography.value", "biography.director"],
         "gmOnlyFields": ["biography.director"]
       }
+    },
+    "Item": {
+      "weapon": {
+        "filePathFields": {}
+      },
+      "form": {
+        "filePathFields": {}
+      }
+    },
+    "ChatMessage": {
+      "standard": {}
     }
   },
   "flags": {
     "hotReload": {
       "extensions": ["css", "html", "hbs", "json"],
-      "paths": ["css", "src/styles", "lang", "templates"]
+      "paths": ["css", "styles", "lang", "templates"]
     }
   },
   "url": "https://github.com/Dragodoth/hollows-rpg",
@@ -60,5 +71,15 @@
   "packFolders": [],
   "socket": false,
   "manifest": "https://raw.githubusercontent.com/Dragodoth/hollows-rpg/refs/heads/main/system.json",
-  "download": "https://github.com/Dragodoth/hollows-rpg/releases/download/release-0.0.1/hollows-rpg-release-0.0.1.zip"
+  "download": "https://github.com/Dragodoth/hollows-rpg/releases/download/release-0.0.1/hollows-rpg-release-0.0.1.zip",
+  "background": "systems/hollows-rpg/assets/anvil-impact.png",
+  "grid": {
+    "type": 1,
+    "distance": 1,
+    "units": "sq",
+    "diagonals": 0
+  },
+  "primaryTokenAttribute": "health.resolve",
+  "secondaryTokenAttribute": "health.wounds",
+  "initiative": "1d20"
 }

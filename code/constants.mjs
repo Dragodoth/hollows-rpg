@@ -26,15 +26,15 @@ export const ASCII = `
 export const healthEffects = Object.freeze({
   resolve: {
     broken: {
-      name: "DRAW_STEEL.Effect.Broken",
+      name: "HOLLOWS_RPG.Effect.Broken",
       hud: false,
       img: "icons/svg/stoned.svg",
       threshold: 0,
     }
   },
-  wounds:{
+  wounds: {
     dying: {
-      name: "DRAW_STEEL.Effect.Dying",
+      name: "HOLLOWS_RPG.Effect.Dying",
       hud: false,
       img: "icons/svg/skull.svg",
       threshold: 0,

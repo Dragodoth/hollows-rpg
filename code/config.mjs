@@ -2,7 +2,9 @@ import { preLocalize } from "./helpers/localization.mjs";
 
 /**
  * The set of Stats used within the system.
- * @type {Object}
+ * These have special localization handling that checks for `HOLLOWS_RPG.Actor.Stat`.
+ * The `label` is the full name (e.g. Strong).
+ * @type {Record<string, {label: string; rollKey: string}>}
  */
 export const stats = Object.seal({
   strong: {
@@ -29,23 +31,41 @@ export const stats = Object.seal({
 preLocalize("stats", { key: "label" });
 
 /**
- * Configuration information for healing types.
+ * Configuration information for health types.
+ * @type {Record<string, {label: string, color: foundry.utils.Color}>}
  */
 export const health = {
   resolve: {
     label: "HOLLOWS_RPG.Health.Resolve",
-    color: foundry.utils.Color.fromString("#ffed61"),
+    color: foundry.utils.Color.fromString("#ffab0f"),
   },
   wounds: {
     label: "HOLLOWS_RPG.Health.Wounds",
-    color: foundry.utils.Color.fromString("#ff870f"),
+    color: foundry.utils.Color.fromString("#ff0f0f"),
   },
 };
 preLocalize("health", { key: "label" });
 
 /**
+ * Configuration information for healing types.
+ * Keys correspond to keys in `system.stamina`.
+ * This is included in ds.CONFIG not because the top level keys can be customized
+ * but because the properties within the object can be customized.
+ * @type {Record<string, {label: string}>}
+ */
+export const healingTypes = {
+  value: {
+    label: "HOLLOWS_RPG.Health.HealingType.Value",
+  },
+  temporary: {
+    label: "HOLLOWS_RPG.Health.HealingType.Temporary",
+  },
+};
+preLocalize("healingTypes", { key: "label" });
+
+/**
  * List of exploration equipment.
- * @type {Record<string, {label: string, group: string}>}
+ * @type {Record<string, {label: string}>}
  */
 export const explorationEquipmentList = {
   cloak: {
@@ -87,3 +107,18 @@ export const explorationEquipmentList = {
 }
 
 preLocalize("explorationEquipmentList", { key: "label" });
+
+/* -------------------------------------------------- */
+
+export const itemResourceTypes = {
+    token: {
+        id: 'token',
+        label: 'HOLLOWS_RPG.Item.ItemResourceType.token'
+    },
+    counter: {
+        id: 'counter',
+        label: 'HOLLOWS_RPG.Item.ItemResourceType.counter'
+    },
+};
+
+preLocalize("itemResourceTypes", { key: "label" });

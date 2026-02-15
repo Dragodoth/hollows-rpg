@@ -1,0 +1,19 @@
+{{formGroup systemFields.bonuses.fields.statChanges.fields.positive value=system.bonuses.statChanges.positive options=stats disabled=isPlay}}
+{{formGroup systemFields.bonuses.fields.statChanges.fields.negative value=system.bonuses.statChanges.negative options=stats disabled=isPlay}}
+{{#if showChoice}}
+{{formGroup systemFields.bonuses.fields.statChanges.fields.change value=system.bonuses.statChanges.change options=choices disabled=isPlay}}
+{{/if}}
+{{formGroup systemFields.bonuses.fields.health.fields.resolve value=system.bonuses.health.resolve disabled=isPlay}}
+{{formGroup systemFields.bonuses.fields.health.fields.wounds value=system.bonuses.health.wounds disabled=isPlay}}
+{{formGroup systemFields.resource.fields.hasResource value=system.resource.hasResource disabled=isPlay}}
+{{#if system.resource.hasResource}}
+  {{formGroup systemFields.resource.fields.name value=system.resource.name disabled=isPlay}}
+  {{formGroup systemFields.resource.fields.type value=system.resource.type options=resourceType disabled=isPlay}}
+  {{#if ( eq system.resource.type "token")}}
+    {{formGroup systemFields.resource.fields.state value=system.resource.state disabled=isPlay}}
+  {{/if}}
+  {{#if ( eq system.resource.type "counter")}}
+    {{formGroup systemFields.resource.fields.value value=system.resource.value disabled=isPlay}}
+    {{formGroup systemFields.resource.fields.max value=system.resource.max disabled=isPlay}}
+  {{/if}}
+{{/if}}

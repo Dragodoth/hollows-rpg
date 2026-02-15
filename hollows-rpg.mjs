@@ -37,6 +37,8 @@ Hooks.once("init", () => {
 
   helpers.registerHandlebars();
 
+  const templates = []
+
   //Assign data models & setup templates
   for (const [doc, models] of Object.entries(data)) {
     if (!CONST.ALL_DOCUMENT_TYPES.includes(doc)) continue;
@@ -48,10 +50,15 @@ Hooks.once("init", () => {
     }
   }
 
+  foundry.applications.handlebars.loadTemplates(templates);
+
   // Status Effect Transfer
-  for (const [id, value] of Object.entries(HOLLOWS_CONST.healthEffects)) {
-    CONFIG.statusEffects.push({ id, _id: id.padEnd(16, "0"), ...value });
+  for (const [type, effect] of Object.entries(HOLLOWS_CONST.healthEffects)){
+    for (const [id, value] of Object.entries(effect)){
+      CONFIG.statusEffects.push({ id, _id: id.padEnd(16, "0"), ...value });
+    }
   }
+
 
   // Destructuring some pieces for simplification
   const { Actors, Items } = foundry.documents.collections;
@@ -61,7 +68,12 @@ Hooks.once("init", () => {
   Actors.registerSheet(HOLLOWS_CONST.systemID, applications.sheets.HollowsRPGHunterSheet, {
     types: ["hunter"],
     makeDefault: true,
-    label: "HOLLOWS_RPG.Sheet.Labels.Character",
+    label: "HOLLOWS_RPG.SHEET.Labels.Character",
+  });
+
+    Items.registerSheet(HOLLOWS_CONST.systemID, applications.sheets.HollowsRPGItemSheet, {
+    makeDefault: true,
+    label: "HOLLOWS_RPG.SHEET.Labels.Item",
   });
 
   CONFIG.Token.objectClass = canvas.placeables.HollowsRPGToken;

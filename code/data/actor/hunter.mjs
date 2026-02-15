@@ -38,13 +38,13 @@ export default class HunterModel extends BaseActorModel {
 
     schema.health = new fields.SchemaField({
       resolve: new fields.SchemaField({
-        value: new fields.NumberField({ initial: 5, nullable: false, integer: true }),
-        max: new fields.NumberField({ initial: 5, nullable: false, integer: true }),
+        value: new fields.NumberField({ initial: 0, nullable: false, integer: true }),
+        max: new fields.NumberField({ initial: 0, nullable: false, integer: true }),
         temporary: new fields.NumberField({ initial: 0, nullable: false, integer: true }),
       }),
       wounds: new fields.SchemaField({
-        value: new fields.NumberField({ initial: 5, nullable: false, integer: true }),
-        max: new fields.NumberField({ initial: 5, nullable: false, integer: true }),
+        value: new fields.NumberField({ initial: 0, nullable: false, integer: true }),
+        max: new fields.NumberField({ initial: 0, nullable: false, integer: true }),
         temporary: new fields.NumberField({ initial: 0, nullable: false, integer: true }),
       })
     });
@@ -57,7 +57,10 @@ export default class HunterModel extends BaseActorModel {
           });
           return obj;
         }, {})
-      )
+      ),
+      corruption: new fields.SchemaField({
+        value: new fields.NumberField({ initial: 0, nullable: false, integer: true }),
+      }),
     })
 
     return schema;
@@ -69,6 +72,18 @@ export default class HunterModel extends BaseActorModel {
   static actorBiography() {
     const bio = super.actorBiography();
 
+    bio.class = new fields.StringField({ required: true });
+    bio.pronouns = new fields.StringField({ required: true });
+    bio.gender = new fields.StringField({ required: true });
+    bio.ethnicity = new fields.StringField({ required: true });
+    bio.disability = new fields.StringField({ required: true });
+    bio.hope = new fields.StringField({ required: true });
+    bio.connections = new fields.StringField({ required: true });
+    bio.appearance = new fields.StringField({ required: true });
+    bio.possessions = new fields.StringField({ required: true });
+    bio.passingTheTime = new fields.StringField({ required: true });
+
+    bio.age = new fields.StringField({ required: true });
     return bio;
   }
 
@@ -78,6 +93,29 @@ export default class HunterModel extends BaseActorModel {
   prepareBaseData() {
     super.prepareBaseData();
 
+    const weaponBonuses = {
+      resolve: 0,
+      wounds: 0,
+      statsPositive: {},
+      statsNegative: "",
+      statChange: 0,
+    };
+
+    for (const weapon of this.weapons) {
+      const bonuses = weapon.system.bonuses;
+      this.health.resolve.max += bonuses.health.resolve;
+      this.health.wounds.max += bonuses.health.wounds;
+
+      if (bonuses.statChanges.change === "both"){
+        for (const stat of bonuses.statChanges.positive){
+          this.hunter.stats[stat].value += 1;
+        }
+      }
+      else {
+        this.hunter.stats[bonuses.statChanges.change].value += 2;
+      }
+      this.hunter.stats[bonuses.statChanges.negative].value -= 1;
+    }
   }
 
   /* -------------------------------------------------- */
@@ -108,6 +146,26 @@ export default class HunterModel extends BaseActorModel {
 
     this.parent.updateSource(updates);
   }
+
+  /* -------------------------------------------------- */
+
+  /**
+   * Returns all of the actor's weapons.
+   * @returns {Array<Omit<HollowsRPGItem, "type" | "system"> & { type: "weapon", system: import("../item/weapon.mjs").default }>}
+   */
+  get weapons() {
+    return this.parent.itemTypes.weapon;
+  }
+
+  /**
+   * Returns all of the actor's forms.
+   * @returns {Array<Omit<HollowsRPGItem, "type" | "system"> & { type: "fomr", system: import("../item/form.mjs").default }>}
+   */
+  get forms() {
+    return this.parent.itemTypes.form;
+  }
+
+  /* -------------------------------------------------- */
 
   /**
    * Prompt the user for what types.

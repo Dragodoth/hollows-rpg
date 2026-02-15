@@ -2,23 +2,23 @@
   <div class="global group form-group">
     <div class="modifiers">
       <div>
-          <label for="stat">{{localize "HOLLOWS_RPG.Actor.hunter.Fields.stats.label"}}</label>
+          <label for="stat">{{localize "HOLLOWS_RPG.ROLL.Core.Prompt.chooseStat.label"}}</label>
           <select name="stat">
             {{selectOptions statOptions selected=stat}}
           </select>
         </div>
       </div>
-      <div class="modifiers">
+      <div class="form-group modifiers">
         <div class="form-fields {{#unless useTargetNumber}}hidden {{/unless}}">
-          <label for="targetNumber">{{localize "HOLLOWS_RPG.Actor.hunter.Fields.targetNumber.label"}}</label>
+          <label for="targetNumber">{{localize "HOLLOWS_RPG.ROLL.Core.Prompt.targetNumber.label"}}</label>
           {{numberInput targetNumber name="targetNumber" step=1 min=1 max=20}}
         </div>
         <div>
-          <label for="useTargetNumber">{{localize "HOLLOWS_RPG.Actor.hunter.Fields.useTargetNumber.label"}}</label>
+          <label for="useTargetNumber">{{localize "HOLLOWS_RPG.ROLL.Core.Prompt.useTargetNumber.label"}}</label>
           <input type="checkbox" name="useTargetNumber" {{checked useTargetNumber}}>
         </div>
       </div>
-    <div class="modifiers">
+    <div class="form-group modifiers">
       <button type="button" class="advantage-buttons {{#if (eq advantageMode " advantage")}}selected{{/if}}"
         data-action="updateAdvantageMode" data-advantagemode="advantage">
         {{#if (eq advantageMode "advantage")}}
@@ -26,7 +26,7 @@
         {{else}}
         <span><i class="fa-regular fa-circle"></i></span>
         {{/if}}
-        <span class="label">{{localize "HOLLOWS_RPG.Roll.Advantage"}}</span>
+        <span class="label">{{localize "HOLLOWS_RPG.ROLL.Core.Advantage"}}</span>
       </button>
       <button type="button" class="advantage-buttons {{#if (eq advantageMode " disadvantage")}}selected{{/if}}"
         data-action="updateAdvantageMode" data-advantagemode="disadvantage">
@@ -35,7 +35,7 @@
         {{else}}
         <span><i class="fa-regular fa-circle"></i></span>
         {{/if}}
-        <span class="label">{{localize "HOLLOWS_RPG.Roll.Disadvantage"}}</span>
+        <span class="label">{{localize "HOLLOWS_RPG.ROLL.Core.Disadvantage"}}</span>
       </button>
     </div>
   </div>

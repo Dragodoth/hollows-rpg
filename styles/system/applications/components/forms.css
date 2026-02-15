@@ -34,6 +34,21 @@
           overflow: hidden;
         }
       }
+      fieldset {
+        padding: revert;
+
+        legend {
+          button {
+            display: inline;
+            border: none;
+            height: revert;
+            min-height: revert;
+            width: revert;
+            min-width: revert;
+            padding: 0.25rem;
+          }
+        }
+      }
     }
   }
 

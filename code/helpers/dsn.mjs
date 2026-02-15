@@ -21,7 +21,7 @@ export function diceSoNiceRollStart(messageId, context) {
       else if ((++i < arr.length) && (arr[i].options.rollOrder === 999)) return false;
       return true;
     });
-    context.roll = foundry.dice.Roll.fromTerms(terms);
+    context.roll = foundry.dice.ROLL.fromTerms(terms);
   } else {
     context.blind = context.roll.dice[0].options.rollOrder === 999;
   }

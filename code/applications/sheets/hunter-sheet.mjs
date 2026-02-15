@@ -1,8 +1,9 @@
 import { systemPath } from "../../constants.mjs";
 // import { AdvancementModel, TreasureModel, KitModel, ProjectModel } from "../../data/item/_module.mjs";
-// import CharacteristicInput from "../apps/characteristic-input.mjs";
+import StatInput from "../apps/stat-input.mjs";
 // import FillTraitDialog from "../apps/advancement/fill-trait-dialog.mjs";
 import HollowsRPGActorSheet from "./actor-sheet.mjs";
+import { WeaponModel, FormModel } from "../../data/item/_module.mjs";
 
 /**
  * @import HollowsRPGItem from "../../documents/item.mjs";
@@ -17,6 +18,7 @@ export default class HollowsRPGHunterSheet extends HollowsRPGActorSheet {
   static DEFAULT_OPTIONS = {
     classes: ["hunter"],
     actions: {
+      editStats: this.#editStats,
     },
     position: {
       // Skills section is visible by default
@@ -36,12 +38,7 @@ export default class HollowsRPGHunterSheet extends HollowsRPGActorSheet {
       // Foundry-provided generic template
       template: "templates/generic/tab-navigation.hbs",
     },
-    /*,
-    stats: {
-      template: systemPath("templates/sheets/actor/hunter-sheet/stats.hbs"),
-      templates: ["characteristics.hbs", "combat.hbs", "movement.hbs", "immunities-weaknesses.hbs"].map(t => systemPath(`templates/sheets/actor/shared/partials/stats/${t}`)),
-      scrollable: [""],
-    },
+    /*
     features: {
       template: systemPath("templates/sheets/actor/hunter-sheet/features.hbs"),
       templates: ["templates/sheets/actor/shared/partials/features/features.hbs"].map(t => systemPath(t)),
@@ -49,10 +46,6 @@ export default class HollowsRPGHunterSheet extends HollowsRPGActorSheet {
     },
     equipment: {
       template: systemPath("templates/sheets/actor/hunter-sheet/equipment.hbs"),
-      scrollable: [""],
-    },
-    projects: {
-      template: systemPath("templates/sheets/actor/hunter-sheet/projects.hbs"),
       scrollable: [""],
     },
     abilities: {
@@ -78,6 +71,10 @@ export default class HollowsRPGHunterSheet extends HollowsRPGActorSheet {
     switch (partId) {
       case "header":
         context.stats = this._getStats(false);
+        context.weapons = await this._getWeapons();
+        context.weaponsFields = WeaponModel.schema.fields;
+        context.forms = await this._getForms();
+        context.formsFields = FormModel.schema.fields;
         //context.characteristics = this._getCharacteristics(false);
         //context.unfilledSkill = !!this.actor.system._unfilledTraits.skill?.size;
         //context.skills = this._getSkills();
@@ -106,6 +103,48 @@ export default class HollowsRPGHunterSheet extends HollowsRPGActorSheet {
       };
       return obj;
     }, {});
+  }
+
+  /* -------------------------------------------------- */
+
+  /**
+   * Prepare the context for weapons.
+   * @returns {Array<ActorSheetItemContext>}
+   * @protected
+   */
+  async _getWeapons() {
+    const weapons = [
+      ...this.actor.itemTypes.weapon,
+    ].sort((a, b) => a.sort - b.sort);
+    const context = [];
+
+    for (const weapon of weapons) {
+      const weaponContext = await super._prepareItemContext(weapon);
+      weaponContext.typeLabel = CONFIG.Item.typeLabels[weapon.type];
+      context.push(weaponContext);
+    }
+
+    return context;
+  }
+
+    /**
+   * Prepare the context for forms.
+   * @returns {Array<ActorSheetItemContext>}
+   * @protected
+   */
+  async _getForms() {
+    const forms = [
+      ...this.actor.itemTypes.form,
+    ].sort((a, b) => a.sort - b.sort);
+    const context = [];
+
+    for (const form of forms) {
+      const formContext = await super._prepareItemContext(form);
+      formContext.typeLabel = CONFIG.Item.typeLabels[form.type];
+      context.push(formContext);
+    }
+
+    return context;
   }
 
   /* -------------------------------------------------- */
@@ -159,6 +198,18 @@ export default class HollowsRPGHunterSheet extends HollowsRPGActorSheet {
       case "stat":
         return this.actor.rollStat(dataset.stat);
     }
+  }
+
+  /* -------------------------------------------------- */
+
+  /**
+   * Open a configuration app to edit this hero's characteristics.
+   * @this DrawSteelHeroSheet
+   * @param {PointerEvent} event   The originating click event.
+   * @param {HTMLElement} target   The capturing HTML element which defined a [data-action].
+   */
+  static async #editStats(event, target) {
+    return new StatInput({ document: this.document }).render({ force: true });
   }
 
 }

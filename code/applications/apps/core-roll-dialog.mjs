@@ -97,7 +97,7 @@ export default class CoreRollDialog extends RollDialog {
 
     let newTargetNumber = formData.targetNumber;
     if (newTargetNumber < 1 || newTargetNumber > 20){
-      ui.notifications.error(game.i18n.localize("HOLLOWS_RPG.Roll.Core.Prompt.tnError"));
+      ui.notifications.error(game.i18n.localize("HOLLOWS_RPG.ROLL.Core.Prompt.tnError"));
       newTargetNumber = 10;
     }
     this.options.context.targetNumber = newTargetNumber;

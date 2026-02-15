@@ -44,8 +44,54 @@
             font-weight: normal;
           }
         }
-        a[data-action="editMonsterMetadata"] {
-          text-align: right;
+      }
+
+      .resources {
+        align-items: flex-start;
+        .form-group.stacked {
+          flex-direction: column-reverse;
+        }
+
+        .resource {
+          gap: 0.5rem;
+          input[type=number] {
+            width: 60px;
+            flex: 0 0 50px;
+            text-align: center;
+          }
+        }
+
+        .resource-label {
+          font-weight: 600;
+          text-align: center;
+          display: flex;
+          justify-content: space-around;
+        }
+
+        .resource-divider {
+          flex: 0 0 20px;
+          text-align: center;
+        }
+
+        .resource-max {
+          /* font-size: large; */
+          text-align: center;
+        }
+      }
+
+      .stats {
+        .stats {
+          font-size: large;
+          height: 30px;
+          line-height: 30px;
+          text-align: center;
+        }
+
+        .edit {
+          input {
+            width: 60px;
+            text-align: center;
+          }
         }
       }
     }
@@ -59,32 +105,8 @@
         align-items: start;
         text-align: center;
       }
-      div.actor-data > div,
-      .malice {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        margin-top: 5px;
-        label,
-        .form-fields {
-          flex: 0 0 50%;
-        }
-        label {
-          font-weight: bold;
-        }
-      }
       dd {
         text-align: right;
-      }
-      [data-action="levelUp"] {
-        --button-size: var(--font-size-20);
-        display: inline-block;
-        margin-top: -1.5px;
-        margin-bottom: -1.5px;
-      }
-      div.take-respite  {
-        text-align: center;
-        margin-top: 5px;
       }
     }
   }
@@ -93,116 +115,6 @@
     height: 100%
   }
 
-  .resources {
-    align-items: flex-start;
-    .form-group.stacked {
-      flex-direction: column-reverse;
-    }
-
-    .resource {
-      gap: 0.5rem;
-      input[type=number] {
-        width: 60px;
-        flex: 0 0 50px;
-        text-align: center;
-      }
-      &.heroic {
-        gap: 0.25rem;
-        label {
-          text-align: right;
-          display: flex;
-          justify-content: flex-end;
-        }
-      }
-    }
-
-    .resource-label {
-      font-weight: 600;
-      text-align: center;
-      display: flex;
-      justify-content: space-around;
-    }
-
-    .resource-divider {
-      flex: 0 0 20px;
-      text-align: center;
-    }
-
-    .resource-max {
-      /* font-size: large; */
-      text-align: center;
-    }
-  }
-
-  .free-strike {
-    flex: 0 0 120px;
-    .free-strike-body {
-      text-align: center;
-      height: 100%;
-      padding: 10px 0;
-    }
-  }
-
-  .stats {
-    .stats {
-      font-size: large;
-      height: 30px;
-      line-height: 30px;
-      text-align: center;
-    }
-
-    .edit {
-      input {
-        width: 60px;
-        text-align: center;
-      }
-    }
-  }
-
-  .combat,
-  .movement {
-    .play {
-      text-align: center;
-    }
-
-    .form-group {
-      text-align: center;
-    }
-
-    .size {
-      input {
-        margin: 0 10px;
-      }
-
-      select {
-        flex-basis: 70px;
-      }
-    }
-  }
-
-  .movement {
-    .form-group:has(select) {
-      flex: 3;
-    }
-  }
-
-  .immunities-weaknesses {
-    align-items: stretch;
-
-    .immunity,
-    .weakness {
-      white-space: nowrap;
-    }
-  }
-
-  .immunities,
-  .weaknesses {
-    gap: 5px;
-
-    .form-group {
-      flex: 1 1 100px;
-    }
-  }
 
   .tab {
     .item-header {

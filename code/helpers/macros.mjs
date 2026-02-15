@@ -49,9 +49,9 @@ export async function createDocMacro(data, slot) {
  */
 export async function rollItemMacro(itemUuid) {
   const item = await fromUuid(itemUuid);
-  if (!item) return ui.notifications.warn("HOLLOWS_RPG.Macro.Warnings.Roll.NoItem", { localize: true });
-  if (!item.parent) return ui.notifications.warn("HOLLOWS_RPG.Macro.Warnings.Roll.NotOwnedItem", { format: { item: item.name } });
-  if (!(item.system.roll instanceof Function)) return ui.notifications.warn("HOLLOWS_RPG.Macro.Warnings.Roll.NoRoll", { format: { item: item.name } });
+  if (!item) return ui.notifications.warn("HOLLOWS_RPG.Macro.Warnings.ROLL.NoItem", { localize: true });
+  if (!item.parent) return ui.notifications.warn("HOLLOWS_RPG.Macro.Warnings.ROLL.NotOwnedItem", { format: { item: item.name } });
+  if (!(item.system.roll instanceof Function)) return ui.notifications.warn("HOLLOWS_RPG.Macro.Warnings.ROLL.NoRoll", { format: { item: item.name } });
 
   item.system.roll();
 }

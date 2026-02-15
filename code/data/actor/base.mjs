@@ -96,12 +96,12 @@ export default class BaseActorModel extends HollowsPRGSystemModel {
     const allowed = await super._preUpdate(changes, options, user);
     if (allowed === false) return false;
 
-    if (changes.system?.health.resolve) {
+    if (changes.system?.health?.resolve) {
       options.hollows ??= {};
       options.hollows.previousResolve = { ...this.health.resolve };
     }
 
-    if (changes.system?.health.wounds) {
+    if (changes.system?.health?.wounds) {
       options.hollows ??= {};
       options.hollows.previousWounds = { ...this.health.wounds };
     }
@@ -120,21 +120,23 @@ export default class BaseActorModel extends HollowsPRGSystemModel {
   _onUpdate(changed, options, userId) {
     super._onUpdate(changed, options, userId);
 
-    if ((game.userId === userId) && changed.system?.resolve) this.updateHealthEffects("resolve");
-    if ((game.userId === userId) && changed.system?.wounds) this.updateHealthEffects("wounds");
+    if ((game.userId === userId) && changed.system?.health?.resolve) this.updateHealthEffects("resolve");
+    if ((game.userId === userId) && changed.system?.health?.wounds) this.updateHealthEffects("wounds");
 
-    if (options.ds?.previousStamina && changed.system?.stamina) {
-      const stamDiff = options.ds.previousStamina.value - (changed.system.stamina.value || options.ds.previousStamina.value);
-      const tempDiff = options.ds.previousStamina.temporary - (changed.system.stamina.temporary || options.ds.previousStamina.temporary);
-      const diff = stamDiff + tempDiff;
-      this.displayStaminaChange(diff, options.ds.damageType);
+    if (options.hollows?.previousResolve && changed.system?.health?.resolve) {
+      const resDiff = options.hollows.previousResolve.value - (changed.system.health.resolve.value || options.hollows.previousResolve.value);
+      const tempDiff = options.hollows.previousResolve.temporary - (changed.system.health.resolve.temporary || options.hollows.previousResolve.temporary);
+      const diff = resDiff + tempDiff;
+      const healthType = changed.system?.health ? Object.keys(changed.system.health) : null
+      this.displayHealthChange(diff, Object.keys(changed.system?.health) ?? null);
     }
 
-    if (options.ds?.previousStamina && changed.system?.stamina) {
-      const stamDiff = options.ds.previousStamina.value - (changed.system.stamina.value || options.ds.previousStamina.value);
-      const tempDiff = options.ds.previousStamina.temporary - (changed.system.stamina.temporary || options.ds.previousStamina.temporary);
-      const diff = stamDiff + tempDiff;
-      this.displayStaminaChange(diff, options.ds.damageType);
+    if (options.hollows?.previousWounds && changed.system?.health?.wounds) {
+      const woundDiff = options.hollows.previousWounds.value - (changed.system.health.wounds.value || options.hollows.previousWounds.value);
+      const tempDiff = options.hollows.previousWounds.temporary - (changed.system.health.wounds.temporary || options.hollows.previousWounds.temporary);
+      const diff = woundDiff + tempDiff;
+      const healthType = changed.system?.health ? Object.keys(changed.system.health) : null
+      this.displayHealthChange(diff, healthType);
     }
   }
 
@@ -149,7 +151,7 @@ export default class BaseActorModel extends HollowsPRGSystemModel {
       let threshold = (Number.isNumeric(value.threshold)) ? value.threshold : foundry.utils.getProperty(this.parent, value.threshold);
       threshold = Number(threshold);
 
-      const active = Number.isNumeric(threshold) && (this[healthType].value <= threshold);
+      const active = Number.isNumeric(threshold) && (this.health[healthType].value <= threshold);
       await this.parent.toggleStatusEffect(key, { active });
     }
   }
@@ -211,7 +213,7 @@ export default class BaseActorModel extends HollowsPRGSystemModel {
       return this.parent;
     }
 
-    const damageTypeOption = { ds: { damageType: options.type } };
+    const damageTypeOption = { hollows: { damageType: options.type } };
     if (this.isMinion) {
       const combatGroups = this.combatGroups;
       if (combatGroups.size === 1) {

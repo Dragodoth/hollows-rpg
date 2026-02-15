@@ -1,30 +1,29 @@
 {{!-- Partial for header tags --}}
 {{#*inline "headerTag"}}
-{{#if originDoc}}
-
-<span data-document-uuid="{{lookup originDoc " uuid"}}">
-  <a class="filled" data-action="viewDoc">
-    {{lookup originDoc "name"}}
-  </a>
-  {{#unless (or @root.isPlay noEdit)}}
-  <a data-action="deleteDoc">
-    <i class="fa-solid fa-trash-can"></i>
-  </a>
-  {{/unless}}
-</span>
-{{else}}
-{{#if @root.isPlay}}
-<span class="unfilled">
-  {{localize "HOLLOWS_RPG.Sheet.NoDocument" documentName=(localize (concat "TYPES.Item." originType))}}
-</span>
-{{else}}
-{{#unless noEdit}}
-<a class="unfilled" data-action="addOrigin" data-type="{{originType}}">
-  {{localize "HOLLOWS_RPG.Sheet.Add" itemName=(localize (concat "TYPES.Item." originType))}}
-</a>
-{{/unless}}
-{{/if}}
-{{/if}}
+  {{#if originDoc}}
+    <span data-document-uuid="{{lookup originDoc "uuid"}}">
+      <a class="filled" data-action="viewDoc">
+        {{lookup originDoc "name"}}
+      </a>
+      {{#unless (or @root.isPlay noEdit)}}
+        <a data-action="deleteDoc">
+          <i class="fa-solid fa-trash-can"></i>
+        </a>
+      {{/unless}}
+    </span>
+  {{else}}
+    {{#if @root.isPlay}}
+      <span class="unfilled">
+        {{localize "HOLLOWS_RPG.SHEET.NoDocument" documentName=(localize (concat "TYPES.Item." originType))}}
+      </span>
+    {{else}}
+      {{#unless noEdit}}
+        <a class="unfilled" data-action="addOrigin" data-type="{{originType}}">
+          {{localize "HOLLOWS_RPG.SHEET.Add" itemName=(localize (concat "TYPES.Item." originType))}}
+        </a>
+      {{/unless}}
+    {{/if}}
+  {{/if}}
 {{/inline}}
 
 {{! Sheet Header }}
@@ -49,18 +48,86 @@
       <div class="career tag">
         {{> headerTag originDoc=document.system.career originType="career"}}
       </div>
-      <div class="class tag">
-        {{> headerTag originDoc=document.system.class originType="class"}}
-      </div>
-      {{#each document.system.subclasses as |subclass|}}
-      <div class="subclass tag">
-        {{> headerTag originDoc=subclass originType="subclass" noEdit=true}}
+      {{#each document.system.weapons as |weapon|}}
+      <div class="weapon tag">
+        {{> headerTag originDoc=weapon originType="weapon"}}
       </div>
       {{/each}}
     </div>
+    {{#if isPlay}}
+    <fieldset class="resources flexrow">
+      <legend>{{localize "HOLLOWS_RPG.SHEET.Health"}}</legend>
+      <div class="resource resolve flexcol">
+        <div class="resource-label">
+          <span>{{systemFields.health.fields.resolve.label}}</span>
+        </div>
+        <div class="form-group resource-content flexrow">
+          <div class="resource-temporary">
+            {{formGroup
+            systemFields.health.fields.resolve.fields.temporary
+            value=system.health.resolve.temporary
+            dataset=datasets.notSource
+            classes="stacked"
+            }}
+          </div>
+          <div class="resource-current">
+            {{formGroup
+            systemFields.health.fields.resolve.fields.value
+            value=system.health.resolve.value
+            dataset=datasets.notSource
+            classes="stacked"
+            }}
+          </div>
+          <span class="resource-max">
+            <div class=" stacked">
+              <label class="input-placeholder-label">
+                {{localize "HOLLOWS_RPG.Actor.base.FIELDS.health.resolve.max.label"}}
+              </label>
+              <div class="input-placeholder">
+                {{system.health.resolve.max}}
+              </div>
+            </div>
+          </span>
+        </div>
+      </div>
+      <div class="resource wounds flexcol">
+        <div class="resource-label">
+          <span>{{systemFields.health.fields.wounds.label}}</span>
+        </div>
+        <div class="form-group resource-content flexrow">
+          <div class="resource-temporary">
+            {{formGroup
+            systemFields.health.fields.wounds.fields.temporary
+            value=system.health.wounds.temporary
+            dataset=datasets.notSource
+            classes="stacked"
+            }}
+          </div>
+          <div class="resource-current">
+            {{formGroup
+            systemFields.health.fields.wounds.fields.value
+            value=system.health.wounds.value
+            dataset=datasets.notSource
+            classes="stacked"
+            }}
+          </div>
+          <span class="resource-max">
+            <div class=" stacked">
+              <label class="input-placeholder-label">
+                {{localize "HOLLOWS_RPG.Actor.base.FIELDS.health.wounds.max.label"}}
+              </label>
+              <div class="input-placeholder">
+                {{system.health.wounds.max}}
+              </div>
+            </div>
+          </span>
+        </div>
+      </div>
+    </fieldset>
+    {{/if}}
     <fieldset class="stats flexrow">
       <legend>
-        {{systemFields.stats.label}}
+        {{systemFields.hunter.fields.stats.label}}
         {{#unless (or isPlay editStats)}}
         <button type="button" class="icon fa-solid fa-cog" data-action="editStats"></button>
         {{/unless}}
@@ -68,7 +135,7 @@
       {{#each stats as |stat key|}}
       {{#unless ../editStats}}
       <a class="stats play {{disabled (not @root.owner)}}" data-action="roll" data-roll-type="stat" data-stat="{{key}}"
-        data-tooltip-text="{{localize " HOLLOWS_RPG.Roll.Prompt" prompt=stat.field.label}}" {{disabled (not @root.isPlay)}}>
+        data-tooltip-text="{{localize " HOLLOWS_RPG.ROLL.Prompt" prompt=stat.field.label}}" {{disabled (not @root.isPlay)}}>
         {{stat.field.label}} {{numberFormat stat.value}}
       </a>
       {{else}}

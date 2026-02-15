@@ -10,26 +10,181 @@
       },
       "Health":{
         "Resolve": "Resolve",
-        "Wounds": "Wounds"
+        "Wounds": "Wounds",
+        "HealingType": {
+          "Value": "{health}",
+          "Temporary": "Temporary {health}"
+        }
       },
-      "Tabs":{
-        "weapons": "Weapons",
+      "Tabs": {
+        "abilities": "Abilities",
         "features": "Features",
         "equipment": "Equipment",
         "echoes": "Echoes",
         "effects": "Effects",
         "biography": "Biography"
       },
+      "base": {
+        "FIELDS": {
+          "health": {
+            "resolve": {
+              "label": "Resolve",
+              "max": {
+                "label": "Max"
+              },
+              "value": {
+                "label": "Current"
+              },
+              "temporary": {
+                "label": "Temporary"
+              }
+            },
+            "wounds": {
+              "label": "Wounds",
+              "max": {
+                "label": "Max"
+              },
+              "value": {
+                "label": "Current"
+              },
+              "temporary": {
+                "label": "Temporary"
+              }
+            }
+          },
+          "biography": {
+            "value": {
+              "label": "Biography"
+            },
+            "director": {
+              "label": "Director Notes"
+            }
+          }
+        }
+      },
       "hunter": {
-        "Fields": {
-          "targetNumber":{
-            "label": "Target Number"
-          },
+        "FIELDS": {
           "stats": {
-            "label":"Choose a Stat to roll:"
+            "label": "Stats"
           },
-          "useTargetNumber": {
-            "label": "Use Target Number?"
+          "biography": {
+           "languages": {
+              "label": "Languages"
+            },
+            "height": {
+              "label": "Height"
+            },
+            "weight": {
+              "label": "Weight"
+            },
+            "age": {
+              "label": "Age"
+            }
+          }
+        },
+        "StatInput": {
+          "Title": "Edit Stats",
+          "Hint": "The inputs represent initial values before active effects.",
+          "Arrays": "Pick a stat array and assign its values to your stats: [10, 10, 10, 8, 8] or [11, 10, 10, 8, 7].",
+          "Rows": {
+            "Input": "Base"
+          }
+        }
+      }
+    },
+    "Item": {
+      "Tabs": {
+        "description": "Description",
+        "details": "Details",
+        "effects": "Effects"
+      },
+      "ItemResourceType": {
+        "token": "Token",
+        "counter": "Counter"
+      },
+      "base": {
+        "FIELDS": {
+          "description": {
+            "value": {
+              "label": "Description"
+            },
+            "director": {
+              "label": "Director Notes"
+            }
+          },
+          "_hollowwid": {
+            "label": "HOLLOWSID",
+            "hint": "Hollows RPG ID"
+          },
+            "hollowwid": {
+              "label": "HOLLOWSID",
+              "hint": "Hollows RPG ID of other items (e.g. classes, subclasses) required by this item. Any may be fulfilled. Only needed if this is an option in advancements."
+          }
+        }
+      },
+      "weapon": {
+        "FIELDS": {
+          "bonuses": {
+            "statChanges": {
+              "positive": {
+                "label": "Stats +1 or +2",
+                "hint": "Weapon gives +1 or +2 to two Stats."
+              },
+              "negative": {
+                "label": "Stat -1",
+                "hint": "Weapon gives -1 to one Stat."
+              },
+              "change": {
+                "label": "Choose bonuses",
+                "hint": "Choose if you want +1 to both sats or +2 to either."
+              }
+            },
+            "health": {
+              "resolve": {
+                "label": "Resolve bonus"
+              },
+              "wounds": {
+                "label": "Wounds bonus"
+              }
+            }
+          },
+          "resource": {
+            "label": "Resource",
+            "hasResource": {
+              "label": "Do the Weapon have resource?"
+            },
+            "type": {
+              "label": "Resource Type"
+            },
+            "name": {
+              "label": "Resource Name"
+            },
+            "value": {
+              "label": "Resource Value"
+            },
+            "max": {
+              "label": "Resource Max Value"
+            }
+            ,
+            "state": {
+              "label": "Resource State"
+            }
+          }
+        }
+      },
+      "form": {
+        "FIELDS": {
+          "damage": {
+            "resolve": {
+              "label": "Resolve Damage"
+            },
+            "wounds": {
+              "label": "Wounds Damage"
+            }
+          },
+          "weaponLink": {
+            "label": "Weapon Link",
+            "hint": "The Hollows RPG ID of the parent weapon, which can be found in the class's Source Information."
           }
         }
       }
@@ -37,12 +192,6 @@
     "SheetLabels": {
       "Actor": "HollowsRPG Actor Sheet",
       "Item": "HollowsRPG Item Sheet"
-    },
-    "Item": {
-      "Spell": {
-        "SpellLVL": "Level {level} Spells",
-        "AddLVL": "Add LVL {level}"
-      }
     },
     "Effect": {
       "Source": "Source",
@@ -53,11 +202,12 @@
       "Broken": "Broken",
       "Dying": "Dying"
     },
-    "Roll": {
-      "Types":{
-        "Attack": "Attack",
-        "Defend": "Defend",
-        "Explore": "Explore"
+    "ROLL": {
+      "Core": {
+        "Types":{
+          "Attack": "Attack",
+          "Defend": "Defend",
+          "Explore": "Explore"
       },
       "Results":{
         "Success": "Success",
@@ -66,24 +216,31 @@
         "Failure": "Failure",
         "CriticalFailure": "Critical Failure"
       },
-      "Prompt": "Roll {prompt}",
       "Advantage": "Advantage",
       "Disadvantage": "Disadvantage",
-      "Core": {
-        "Prompt": {
-          "Title": "{typeLabel} Roll",
-          "tnError": "The Target Number must be between 1 and 20!"
+      "Prompt": {
+        "label": "Roll {prompt}",
+        "Title": "{typeLabel} Roll",
+        "Button": "Roll!",
+        "tnError": "The Target Number must be between 1 and 20!",
+        "targetNumber":{
+          "label": "Target Number"
+        },
+        "chooseStat": {
+          "label":"Choose a Stat to roll:"
+        },
+        "useTargetNumber": {
+          "label": "Use Target Number?"
         }
       }
+    }
     },
-    "Sheet": {
+    "SHEET": {
       "Labels": {
-        "Character": "Draw Steel Character Sheet",
-        "NPC": "Draw Steel NPC Sheet",
-        "Item": "Draw Steel Item Sheet",
-        "ActiveEffect": "Draw Steel Active Effect Config",
-        "CombatantGroup": "Draw Steel Combatant Group Config",
-        "WallDocument": "Draw Steel Wall Config"
+        "Character": "Hollows RPG Hunter Sheet",
+        "NPC": "Hollows RPG Entity Sheet",
+        "Item": "Hollows RPG Item Sheet",
+        "ActiveEffect": "Hollows RPG Active Effect Config"
       },
       "Add": "+ Add {itemName}",
       "NoDocument": "No {documentName}",
@@ -96,13 +253,18 @@
       "EditCharacteristics": "Edit Characteristics",
       "Other": "Other",
       "LevelUp": "Level Up Available",
-      "ToggleMode": "Toggle Play/Edit Mode"
+      "ToggleMode": "Toggle Play/Edit Mode",
+      "Health": "Health"
     }
   },
   "TYPES": {
     "Actor": {
       "hunter": "Hunter",
-      "npc": "NPC"
+      "entity": "Entity"
+    },
+    "Item": {
+      "weapon": "Weapon",
+      "form": "Form"
     }
   }
 }

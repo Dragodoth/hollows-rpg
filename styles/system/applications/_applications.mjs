@@ -9,3 +9,4 @@ import "./components/embeds.css";
 import "./components/forms.css";
 
 import "./sheets/actor-sheet.css";
+import "./sheets/item-sheet.css";
