@@ -1,10 +1,12 @@
-Template repo for a new package (system or module) for FVTT.
+This is an Unofficial system for Hollows RPG on Foundry VTT.
 
-How to use:
-- Clone this repository or use as a github template.
-- [Optional] Rename relevant files to your liking.
-- Add a `module.json` or `system.json` manifest. You can use one of the `_manifest-<package type>.json` files or just remove both of them.
-- Change all instances of `<REPLACE_ME>` with fitting values.
-- Replace uses of `<module|system>` everywhere with either `module` or `system`.
-- [Optional] Remove `package-lock.json` and run `npm i`.
-- Run `npm ci`.
+## Installation Instructions
+
+You can use one of the following alternative installation methods:
+1. Pasting `https://raw.githubusercontent.com/Dragodoth/hollows-rpg/refs/heads/main/system.json` into the **Install System** dialog on the Setup menu of the application.
+2. Browsing the repository's [Releases](https://github.com/Dragodoth/hollows-rpg/releases) page, where you can copy any system.json link for use in the Install System dialog.
+3. Downloading one of the .zip archives from the Releases page and extracting it into your foundry Data folder, under `Data/systems/hollows-rpg`.
+
+## AI Policy
+
+The Hollows RPG system does not make use of AI (generative or otherwise) for any area of its implementation, be that art, code, or other. We expect all contributors to follow this same policy when contributing with a pull request; contributions made using AI will be rejected outright.
