@@ -36,6 +36,7 @@
       }
       fieldset {
         padding: revert;
+        flex-grow: 1;
 
         legend {
           button {
@@ -106,6 +107,22 @@
 
   .form-group {
 
+    &.input {
+      align-items: flex-start;
+
+      .label {
+        text-wrap: nowrap;
+      }
+
+      .empty {
+        height: 32px;
+      }
+
+      .advancement {
+        height: 32px;
+        text-align: center;
+      }
+    }
 
     &.paired {
       gap: 10px;

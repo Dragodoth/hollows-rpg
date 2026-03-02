@@ -32,31 +32,42 @@
         font-weight: bold;
       }
 
-      .inline-result {
-        display: flex;
-        margin-bottom: 5px;
-
-        .dice-formula {
-          flex: 1 0 calc(100% - 50px);
-          border-radius: 3px 0 0 3px;
-          margin-bottom: 0;
-        }
-
-        .dice-total {
-          flex: 0 0 50px;
-          border-radius: 0 3px 3px 0;
-        }
-      }
-
       .dice-result {
-        .success {
-          color: green;
+        &.success,
+        &.superiorSuccess {
+          color: #556266;
         }
 
-        .failure {
-          color: red;
+
+        &.criticalSuccess {
+          color: #44546A;
+        }
+
+        &.failure {
+          color: #493D71;
+        }
+
+        &.criticalFailure {
+          color: #5B3153;
+        }
+
+        .inline-result {
+          display: flex;
+          margin-bottom: 5px;
+
+          .dice-formula {
+            flex: 1 0 calc(100% - 50px);
+            border-radius: 3px 0 0 3px;
+            margin-bottom: 0;
+          }
+
+          .dice-total {
+            flex: 0 0 50px;
+            border-radius: 0 3px 3px 0;
+          }
         }
       }
+
     }
   }
 }

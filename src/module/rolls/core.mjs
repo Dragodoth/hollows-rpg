@@ -1,3 +1,4 @@
+import {defences} from "../config.mjs";
 import {systemPath} from "../constants.mjs";
 import HollowsRPGChatMessage from "../documents/chat-message.mjs";
 import HOLLOWSRoll from "./base.mjs";
@@ -16,7 +17,7 @@ export default class CoreRoll extends HOLLOWSRoll {
       overwrite: false,
     });
 
-    if (!CoreRoll.VALID_TYPES.has(this.options.type)) throw new Error("Core rolls must be an attack, defen or explore type");
+    if (!CoreRoll.VALID_TYPES.has(this.options.type)) throw new Error("Core rolls must be an attack, defend or explore type");
   }
 
   static ADVANTAGE_MODE_FORMULA = {
@@ -29,10 +30,15 @@ export default class CoreRoll extends HOLLOWSRoll {
 
   static DEFAULT_OPTIONS = Object.freeze({
     type: "explore",
-    tn: 10,
+    targetNumber: 10,
     useTargetNumber: true,
     stat: "strong",
-    advantageMode: "normal"
+    stats: ["strong"],
+    defence: "close",
+    defences: ["close"],
+    advantageMode: "normal",
+    spend: false,
+    spendAmount: 0
   });
 
   /* -------------------------------------------------- */
@@ -128,10 +134,15 @@ export default class CoreRoll extends HOLLOWSRoll {
     const type = options.type ?? "explore";
     const evaluation = options.evaluation ?? "message";
     const advantageMode = options.advantageMode ?? "normal";
-    const stat = options.stat ?? "strong";
+    const stats = options.stats ?? ["strong"];
+    const stat = options.stat ?? stats[0];
     const targetNumber = options.targetNumber ?? 10;
-    const useTargetNumber = options.useTargetNumber ?? True;
-    const target = options.target ?? []
+    const useTargetNumber = options.useTargetNumber ?? true;
+    const defences = options.defences ?? ["close"];
+    const defence = defences[0];
+    const target = options.target ?? [];
+    const spend = options.spend ?? false;
+    const spendAmount = options.spendAmount ?? 0;
 
     options.actor ??= HollowsRPGChatMessage.getSpeakerActor(HollowsRPGChatMessage.getSpeaker());
 
@@ -144,14 +155,18 @@ export default class CoreRoll extends HOLLOWSRoll {
 
 
     const typeLabel = game.i18n.localize(this.TYPES[type].label);
-    let flavor = options.flavor ?? typeLabel;
 
     const context = {
+      stats,
       stat,
       targetNumber,
       useTargetNumber,
+      defences,
+      defence,
       advantageMode,
       type,
+      spend,
+      spendAmount,
     };
 
     const promptValue = await hollows.applications.apps.CoreRollDialog.create({
@@ -162,33 +177,45 @@ export default class CoreRoll extends HOLLOWSRoll {
     });
     if (!promptValue) return null;
 
-    const formula = this.ADVANTAGE_MODE_FORMULA[promptValue.advantageMode] ?? "1d20";
-    const statValue = options.data.hunter.stats[stat].value;
 
-    const coreRoll = new this(formula, options.data, { stat: promptValue.stat, statValue, targetNumber: promptValue.targetNumber, flavor:flavor, target});
+    const weapon = await fromUuid(options.weaponUuid);
+    if (weapon){
+      await weapon.system.spendResource(spendAmount);
+    }
+    const formula = this.ADVANTAGE_MODE_FORMULA[promptValue.advantageMode] ?? "1d20";
+    const statValue = options.data.hunter.stats[promptValue.stat].value;
+    let targetNumberValue = promptValue.targetNumber;
+
+    if (type === "attack" && target && target.actor){
+      targetNumberValue = target.actor.system.entity.defences[promptValue.defence].value;
+    }
+
+    let flavor = `${game.i18n.localize(`HOLLOWS_RPG.Actor.Stat.${stat}`)} (${statValue}) ${game.i18n.localize(CoreRoll.TYPES[type].label)}`;
+    if (type === "attack" && defence){
+      flavor = flavor + ` vs. ${game.i18n.localize(`HOLLOWS_RPG.Actor.Defence.${defence}`)} (${targetNumberValue})`
+    }
+    if ((type === "explore" || type === "defend") && useTargetNumber) {
+      flavor = flavor + ` vs. TN ${targetNumberValue}`
+    }
+
+    const coreRoll = new this(formula, options.data, { stat: promptValue.stat, statValue, targetNumberValue, flavor: flavor, target: target.uuid});
 
     const speaker = HollowsRPGChatMessage.getSpeaker({actor: options.actor});
 
-    let rolls = [];
     switch (evaluation) {
-      case "none":
-        rolls.push(coreRoll);
-        break;
       case "evaluate":
-        rolls.push(await coreRoll.evaluate());
-        break;
+        return {rollMode: promptValue.rollMode, coreRoll: await coreRoll.evaluate(), flavor};
       case "message":
-        rolls.push(await coreRoll.toMessage({speaker}, {rollMode: promptValue.rollMode}));
-        break;
+        return {rollMode: promptValue.rollMode, coreRoll: await coreRoll.toMessage({speaker}, {rollMode: promptValue.rollMode}), flavor};
     }
-    return {rollMode: promptValue.rollMode, coreRolls: rolls};
+    return {rollMode: promptValue.rollMode, coreRoll: coreRoll, flavor};
   }
 
   /* -------------------------------------------------- */
 
   /**
    * Produces the result of a roll as a number.
-   * @returns {1 | 2 | 3 | undefined} Returns a number for the tier or undefined if this isn't yet evaluated.
+   * @returns {criticalFailure | criticalSuccess | failure | success | superiorSuccess | undefined} Returns a string for the result or undefined if this isn't yet evaluated.
    */
   get result() {
     if (this._total === undefined) return undefined;
@@ -197,11 +224,9 @@ export default class CoreRoll extends HOLLOWSRoll {
     if (total == this.options.statValue) return 'criticalSuccess';
     if (total > this.options.statValue) return 'failure';
     if (!this.options.useTargetNumber) return 'success';
-    if (this.options.statValue > this.options.targetNumber && total >= this.options.targetNumber) return 'superiorSuccess';
+    if (this.options.statValue > this.options.targetNumberValue && total >= this.options.targetNumberValue) return 'superiorSuccess';
     return 'success';
   }
-
-
 
   /* -------------------------------------------------- */
 
@@ -212,8 +237,6 @@ export default class CoreRoll extends HOLLOWSRoll {
      label: isPrivate ? "" : game.i18n.localize(this.constructor.RESULTS[this.result].label),
      class: this.result,
     };
-
-    if (this.options.target && this.options.target.length != 0) context.target = await fromUuid(this.options.target);
 
     if (!isPrivate) {
       context.flavorlessFormula = this.flavorlessFormula;

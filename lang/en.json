@@ -1,5 +1,94 @@
 {
   "HOLLOWS_RPG": {
+    "ACTION": {
+      "Error": {
+          "NoActor": "This item needs to be on an actor.",
+          "NoTarget": "There is no token to target",
+          "NoDamage": "There is no Damage type selected"
+      },
+      "Spend": {
+          "resource": {
+            "label": "Resource"
+          },
+          "resolve": {
+            "label": "Resolve"
+          },
+         "wounds": {
+            "label": "Wounds"
+          }
+        },
+      "attack": {
+        "FIELDS": {
+          "description": {
+            "label": "Description"
+          },
+          "attackStats": {
+            "label": "Attack Stats"
+          },
+          "spendResource": {
+            "label": "Does this Attack spend Weapon's Resource?"
+          },
+          "defences": {
+            "label": "Attack Defences"
+          },
+          "targetNumber": {
+            "label": "Target Number (TN)"
+          },
+          "damage": {
+            "resolve": {
+              "label": "Resolve Damage"
+            },
+            "wounds": {
+              "label": "Wounds Damage"
+            }
+          },
+          "attackType": {
+            "label": "Attack Type",
+            "defence": {
+              "label": "Defence"
+            },
+            "targetNumber": {
+              "label": "Target Number"
+            }
+          }
+        }
+      },
+      "damage": {
+        "FIELDS": {
+          "description": {
+            "label": "Description"
+          },
+          "damage": {
+            "resolve": {
+              "label": "Resolve Damage"
+            },
+            "wounds": {
+              "label": "Wounds Damage"
+            }
+          }
+        }
+      }
+    },
+    "Scene": {
+      "Range": {
+        "close": {
+          "label": "Close",
+          "front": "Front",
+          "flankRight": "Flank Right",
+          "flankLeft":  "Flnk Left",
+          "rear": "Rear"
+        },
+        "ranged": {
+          "label": "Ranged",
+          "rangedFront": "Ranged Front",
+          "rangedRight": "Ranged Right",
+          "rangedleft": "Ranged Left"
+        },
+        "support":{
+          "label": "Support"
+        }
+      }
+    },
     "Actor": {
       "Stat": {
         "strong": "Strong",
@@ -8,17 +97,22 @@
         "sharp": "Sharp",
         "wise": "Wise"
       },
+      "Defence": {
+        "close": "Close",
+        "ranged": "Ranged",
+        "wyrd": "Wyrd"
+      },
       "Health":{
         "Resolve": "Resolve",
         "Wounds": "Wounds",
         "HealingType": {
-          "Value": "{health}",
-          "Temporary": "Temporary {health}"
+          "Value": "",
+          "Temporary": "Temporary"
         }
       },
       "Tabs": {
+        "weapons": "Weapons",
         "abilities": "Abilities",
-        "features": "Features",
         "equipment": "Equipment",
         "echoes": "Echoes",
         "effects": "Effects",
@@ -58,16 +152,7 @@
             },
             "director": {
               "label": "Director Notes"
-            }
-          }
-        }
-      },
-      "hunter": {
-        "FIELDS": {
-          "stats": {
-            "label": "Stats"
-          },
-          "biography": {
+            },
            "languages": {
               "label": "Languages"
             },
@@ -81,6 +166,15 @@
               "label": "Age"
             }
           }
+        }
+      },
+      "hunter": {
+        "FIELDS": {
+          "hunter": {
+            "stats": {
+              "label": "Stats"
+            }
+          }
         },
         "StatInput": {
           "Title": "Edit Stats",
@@ -90,20 +184,61 @@
             "Input": "Base"
           }
         }
+      },
+      "entity": {
+        "FIELDS": {
+          "entity": {
+            "defences": {
+              "label": "Defences"
+            }
+          }
+        },
+        "DefenceInput": {
+          "Title": "Edit Defences",
+          "Hint": "The inputs represent initial values before active effects.",
+          "Rows": {
+            "Input": "Base"
+          }
+        }
+      }
+    },
+    "ChatMessage": {
+      "damage": {
+        "NoTokenSelected": "Select a Token!",
+        "DamageResult": "{damage} {type} Damage"
+      },
+      "base": {
+        "Buttons": {
+          "ApplyHeal": {
+            "Label": "Regain {amount} {type} {health}",
+            "TempCapped": "{name} already has more temporary Stamina"
+          },
+          "ApplyDamage": {
+            "Label": "Apply {amount} {type} Damage"
+          }
+        }
       }
     },
     "Item": {
       "Tabs": {
         "description": "Description",
         "details": "Details",
+        "actions": "Actions",
         "effects": "Effects"
       },
       "ItemResourceType": {
         "token": "Token",
         "counter": "Counter"
       },
+      "StatBonuses": {
+        "label": "Stat Bonuses",
+        "hint": ""
+      },
       "base": {
         "FIELDS": {
+          "actions": {
+            "label": "Actions"
+          },
           "description": {
             "value": {
               "label": "Description"
@@ -112,31 +247,24 @@
               "label": "Director Notes"
             }
           },
-          "_hollowwid": {
+          "_hollowsid": {
             "label": "HOLLOWSID",
             "hint": "Hollows RPG ID"
           },
-            "hollowwid": {
-              "label": "HOLLOWSID",
-              "hint": "Hollows RPG ID of other items (e.g. classes, subclasses) required by this item. Any may be fulfilled. Only needed if this is an option in advancements."
+          "hollowssid": {
+            "label": "HOLLOWSID",
+            "hint": "Hollows RPG ID of other items (e.g. classes, subclasses) required by this item. Any may be fulfilled. Only needed if this is an option in advancements."
           }
         }
       },
       "weapon": {
         "FIELDS": {
           "bonuses": {
-            "statChanges": {
-              "positive": {
-                "label": "Stats +1 or +2",
-                "hint": "Weapon gives +1 or +2 to two Stats."
-              },
-              "negative": {
-                "label": "Stat -1",
-                "hint": "Weapon gives -1 to one Stat."
-              },
-              "change": {
-                "label": "Choose bonuses",
-                "hint": "Choose if you want +1 to both sats or +2 to either."
+            "label": "Bonuses",
+            "stats": {
+              "modifiedStats": {
+                "label": "Stats the Weapon modifies",
+                "hint": "Weapon gives -1 to one Stat, and +1 two or +2 to one of two Stats."
               }
             },
             "health": {
@@ -151,7 +279,7 @@
           "resource": {
             "label": "Resource",
             "hasResource": {
-              "label": "Do the Weapon have resource?"
+              "label": "Does the Weapon have resource?"
             },
             "type": {
               "label": "Resource Type"
@@ -164,22 +292,54 @@
             },
             "max": {
               "label": "Resource Max Value"
-            }
-            ,
+            },
+            "tossable": {
+              "label": "Is the Resource token tossable like a coin?"
+            },
             "state": {
               "label": "Resource State"
             }
           }
+        },
+        "ResolveEmbed": "{number} Resolve",
+        "WoundsEmbed": "{number} Wounds",
+        "Error": {
+          "NoAttack": "The Weapon needs to have an Attack configured in Actions tab.",
+          "ResourceZero": "Weapon's Resource is 0!"
         }
       },
       "form": {
         "FIELDS": {
           "damage": {
+            "label": "Damage",
             "resolve": {
-              "label": "Resolve Damage"
+              "label": "Resolve"
             },
             "wounds": {
-              "label": "Wounds Damage"
+              "label": "Wounds"
+            }
+          },
+          "resource": {
+            "label": "Resource",
+            "modifiesResource": {
+              "label": "Does the Form modifies Weapon's Resource?"
+            },
+            "max": {
+              "label": "Resource Max Value"
+            },
+            "tossable": {
+              "label": "Is the Resource token tossable like a coin?"
+            }
+          },
+          "bonuses": {
+            "label": "Bonuses",
+            "stats": {
+              "modifiesStats": {
+                "label": "Does the Form modifies Hunter's stats?"
+              },
+              "modifiedStats": {
+                "label": "Stats the Form modifies"
+              }
             }
           },
           "weaponLink": {
@@ -202,6 +362,36 @@
       "Broken": "Broken",
       "Dying": "Dying"
     },
+    "PSEUDO": {
+      "FIELDS": {
+        "name": {
+          "label": "Name"
+        },
+        "img": {
+          "label": "Image"
+        },
+        "type": {
+          "label": "Type"
+        }
+      },
+      "SHEET": {
+        "Type": "Type",
+        "Health": "Health",
+        "Attack": "Attack",
+        "Damage": {
+          "label": "Damage",
+          "fromForm": "Damage is from {form} form"
+        },
+        "baseConfiguration": "Base Configuration",
+        "TABS": {
+          "details": "Details",
+          "description": "Description"
+        }
+      },
+      "Notifications": {
+        "DeletedInfo": "Deleted {pseudoName} {id} with type {type} from {name}"
+      }
+    },
     "ROLL": {
       "Core": {
         "Types":{
@@ -223,22 +413,17 @@
         "Title": "{typeLabel} Roll",
         "Button": "Roll!",
         "tnError": "The Target Number must be between 1 and 20!",
-        "targetNumber":{
-          "label": "Target Number"
-        },
-        "chooseStat": {
-          "label":"Choose a Stat to roll:"
-        },
-        "useTargetNumber": {
-          "label": "Use Target Number?"
-        }
+        "targetNumber":"Target Number",
+        "chooseStat": "Choose a Stat to roll",
+        "chooseDefence": "Choose a Defence to attack",
+        "useTargetNumber": "Use Target Number?"
       }
     }
     },
     "SHEET": {
       "Labels": {
-        "Character": "Hollows RPG Hunter Sheet",
-        "NPC": "Hollows RPG Entity Sheet",
+        "Hunter": "Hollows RPG Hunter Sheet",
+        "Entity": "Hollows RPG Entity Sheet",
         "Item": "Hollows RPG Item Sheet",
         "ActiveEffect": "Hollows RPG Active Effect Config"
       },
@@ -250,12 +435,22 @@
       "Share": "Share",
       "Delete": "Delete",
       "Resources": "Resources",
-      "EditCharacteristics": "Edit Characteristics",
+      "EditStats": "Edit Stats",
+      "EditDefences": "Edit Defences",
       "Other": "Other",
       "LevelUp": "Level Up Available",
       "ToggleMode": "Toggle Play/Edit Mode",
-      "Health": "Health"
+      "Health": "Health",
+      "Bonuses": "Bonuses",
+      "Attack": "Attack",
+      "Damage": "Damage",
+      "Resource": "Resource",
+      "modifiedByForm": "This field is modified by {weapon}'s {form} Form.",
+      "actions": "Actions"
     }
+  },
+  "DOCUMENT": {
+    "Action": "Action"
   },
   "TYPES": {
     "Actor": {
@@ -263,8 +458,13 @@
       "entity": "Entity"
     },
     "Item": {
+      "attack": "Attack",
       "weapon": "Weapon",
       "form": "Form"
+    },
+    "Action": {
+      "attack": "Attack",
+      "damage": "Damage"
     }
   }
 }

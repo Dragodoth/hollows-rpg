@@ -1,0 +1,16 @@
+<section>
+  <div class="global group">
+    <fieldset class="flexcol">
+      <legend>{{localize "HOLLOWS_RPG.SHEET.actions"}}</legend>
+      {{#each actions}}
+        <button type="submit" class="buttons" data-action="chooseAction" data-actionuuid={{uuid}}>
+          <img class="action-image" src="{{img}}" alt="{{name}}">
+          <div class="label">
+            <span class="name">{{name}}</span>
+            <span class="hint">{{description}}</span>
+          </div>
+        </button>
+      {{/each}}
+    </fieldset>
+  </div>
+</section>

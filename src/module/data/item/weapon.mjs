@@ -1,6 +1,7 @@
 import { systemPath } from "../../constants.mjs";
 import { requiredInteger, setOptions } from "../helpers.mjs";
 import BaseItemModel from "./base.mjs";
+import enrichHTML from "../../utils/enrich-html.mjs";
 
 /**
  * Classes provide the bulk of a hero's features and abilities.
@@ -27,13 +28,19 @@ export default class WeaponModel extends BaseItemModel {
   static defineSchema() {
     const fields = foundry.data.fields;
     const schema = super.defineSchema();
-    const config = hollows.CONFIG;
+    const bonus = { initial: 0, integer: true, nullable: false };
 
     schema.bonuses = new fields.SchemaField({
-      statChanges: new fields.SchemaField({
-        positive: new fields.SetField(setOptions()),
-        negative: new fields.StringField({ required: true }),
-        change: new fields.StringField({ required: true }),
+      stats: new fields.SchemaField({
+        modifiedStats: new fields.SetField(setOptions()),
+        statBonuses: new fields.SchemaField(
+          Object.entries(hollows.CONFIG.stats).reduce((obj, [st, {label}]) => {
+            obj[st] = new fields.SchemaField({
+              bonus: new fields.NumberField({ ...bonus, label}),
+            });
+            return obj;
+          }, {})
+        )
       }),
       health: new fields.SchemaField({
         resolve: requiredInteger({ initial: 3 }),
@@ -47,8 +54,12 @@ export default class WeaponModel extends BaseItemModel {
       name: new fields.StringField({ required: true }),
       value: requiredInteger({ initial: 0 }),
       max: requiredInteger({ initial: 0 }),
-      state: new fields.BooleanField({ initial: true })
+      state: new fields.BooleanField({ initial: true }),
+      tossable: new fields.BooleanField({ initial: false })
     });
+
+    schema.actions = new hollows.data.fields.CollectionField(hollows.data.pseudoDocuments.actions.BaseAction);
+
 
     return schema;
   }
@@ -59,41 +70,134 @@ export default class WeaponModel extends BaseItemModel {
   async getSheetContext(context) {
     const stats = Object.entries(hollows.CONFIG.stats).map(([value, { label }]) => ({ value, label }));
     context.stats = stats;
-    const showChoice = this.bonuses.statChanges.positive.size == 2;
-    context.showChoice = showChoice;
-    if (showChoice){
-      const [first, second] = this.bonuses.statChanges.positive;
-      context.choices = [
-        {value:"both", label: stats.filter(s => s.value == first)[0].label + " and " + stats.filter(s => s.value == second)[0].label + " + 1"},
-        {value:first, label: stats.filter(s => s.value == first)[0].label + " + 2"},
-        {value:second, label: stats.filter(s => s.value == second)[0].label + " + 2"}
-      ];
+
+    context.modifiedStatsSize = this.bonuses.stats.modifiedStats.size;
+    const statBonuses = this.bonuses.stats.statBonuses;
+    const statBonusesFields = this.schema.fields.bonuses.fields.stats.fields.statBonuses.fields;
+
+    context.statBonuses = Array.from(this.bonuses.stats.modifiedStats).reduce((obj, st) => {
+      obj[st] = statBonuses[st];
+      obj[st].field = statBonusesFields[st].fields;
+      return obj;
+    }, {});
+
+    if (this.form){
+      context.form = this.form;
     }
 
-    context.resourceType = [
-      {value: "token", label: hollows.CONFIG.itemResourceTypes.token.label},
-      {value: "counter", label: hollows.CONFIG.itemResourceTypes.counter.label}
-    ]
-
-
+    context.resourceType = Object.entries(hollows.CONFIG.itemResourceTypes).map(([value, { label }]) => ({ value, label }));
+    console.log(context)
   }
 
   /* -------------------------------------------------- */
 
   /** @inheritdoc */
-  _onCreate(data, options, userId) {
-    if (this.actor && (this.actor.type === "hunter") && (game.userId === userId)) {
+  prepareBaseData() {
+    super.prepareBaseData();
 
+    const form = this.form;
+    if (form?.system.resource.modifiesResource){
+      this.resource.max = form.system.resource.max;
+      this.resource.tossable = form.system.resource.tossable;
     }
+
   }
 
   /* -------------------------------------------------- */
 
-  /** @inheritdoc */
+    /** @inheritdoc */
   prepareDerivedData() {
     super.prepareDerivedData();
-    if (this.actor) {
+  }
 
+  /* -------------------------------------------------- */
+
+  /**
+   * Convenient access to the weapon's form, if it exists.
+   * @returns {HollowsRPGActor | null}
+   */
+  get form() {
+    return this.actor ? this.actor.system.forms.find(f => f.system.weaponLink === this.parent.hollowsid) : null;
+  }
+
+  /* -------------------------------------------------- */
+
+  /**
+   * Convenient access to the weapon's attack, if it exists.
+   * @returns {HollowsRPGActor | null}
+   */
+  get attack() {
+    return this.parent.pseudoCollections.Action.find(a => a.type === "attack") ?? null;
+  }
+
+  /* -------------------------------------------------- */
+
+  /**
+   * @inheritdoc
+   * @param {DocumentHTMLEmbedConfig} config
+   * @param {EnrichmentOptions} options
+   */
+  async toEmbed(config, options = {}) {
+    const embed = document.createElement("div");
+    embed.classList.add("draw-steel", "weapon");
+    if (config.includeName !== false) embed.insertAdjacentHTML("afterbegin", `<h5>${this.parent.name}</h5>`);
+    const context = {
+      system: this,
+      systemFields: this.schema.fields,
+      config: hollows.CONFIG,
+      showDescription: true, // used to prevent showing the description on the details tab of the kit sheet
+    };
+    context.enrichedDescription = await enrichHTML(this.description.value, { ...options, relativeTo: this.parent });
+    await this.getSheetContext(context);
+    const weaponBody = await foundry.applications.handlebars.renderTemplate(systemPath("templates/embeds/item/weapon.hbs"), context);
+    embed.insertAdjacentHTML("beforeend", weaponBody);
+    return embed;
+  }
+
+  /* -------------------------------------------------- */
+
+  /**
+   * Use an ability, generating a chat message and potentially making a power roll.
+   * @param {Partial<AbilityUseOptions>} [options={}] Configuration.
+   * @returns {Promise<DrawSteelChatMessage[] | null>}
+   * TODO: Add hooks based on discussion with module authors.
+   */
+  async use(options = {}) {
+    await super.use();
+  }
+
+  /* -------------------------------------------------- */
+
+  /**
+   * An alias of {@linkcode use}.
+   */
+  async roll(options = {}) {
+    await super.roll();
+  }
+
+  /* -------------------------------------------------- */
+
+  /**
+   * An alias of {@linkcode use}.
+   */
+  async spendResource(amount = 0) {
+    if (!this.resource.hasResource) return;
+    if (this.resource.type === "counter") {
+      if (this.resource.value === 0) {
+        ui.notifications.warn("HOLLOWS_RPG.Item.weapon.Error.ResourceZero", { localize: true });
+        return;
+      }
+      const resourceUpdate = this.resource.value - amount;
+      return this.parent.update({ "system.resource.value": resourceUpdate });
+    }
+    if (this.resource.type === "token") {
+      if (this.resource.value === 0) {
+        ui.notifications.warn("HOLLOWS_RPG.Item.weapon.Error.ResourceZero", { localize: true });
+        return;
+      }
+      const resourceUpdate = this.resource.value - amount;
+      return this.parent.update({ "system.resource.value": resourceUpdate });
     }
   }
+
 }

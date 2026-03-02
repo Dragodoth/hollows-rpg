@@ -1,10 +1,12 @@
 @import url("../src/styles/system/applications/api/roll-dialog.css");
 
 @import url("../src/styles/system/applications/apps/core-roll-dialog.css");
+@import url("../src/styles/system/applications/apps/action-choice-dialog.css");
 
 @import url("../src/styles/system/applications/components/effects.css");
 @import url("../src/styles/system/applications/components/embeds.css");
 @import url("../src/styles/system/applications/components/forms.css");
+@import url("../src/styles/system/applications/components/items.css");
 
 @import url("../src/styles/system/applications/sidebar/tabs/chat.css");
 

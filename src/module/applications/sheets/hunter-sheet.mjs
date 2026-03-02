@@ -1,5 +1,4 @@
 import { systemPath } from "../../constants.mjs";
-// import { AdvancementModel, TreasureModel, KitModel, ProjectModel } from "../../data/item/_module.mjs";
 import StatInput from "../apps/stat-input.mjs";
 // import FillTraitDialog from "../apps/advancement/fill-trait-dialog.mjs";
 import HollowsRPGActorSheet from "./actor-sheet.mjs";
@@ -22,7 +21,7 @@ export default class HollowsRPGHunterSheet extends HollowsRPGActorSheet {
     },
     position: {
       // Skills section is visible by default
-      height: 680,
+      height: 800,
     }
   };
 
@@ -38,20 +37,22 @@ export default class HollowsRPGHunterSheet extends HollowsRPGActorSheet {
       // Foundry-provided generic template
       template: "templates/generic/tab-navigation.hbs",
     },
-    /*
-    features: {
-      template: systemPath("templates/sheets/actor/hunter-sheet/features.hbs"),
-      templates: ["templates/sheets/actor/shared/partials/features/features.hbs"].map(t => systemPath(t)),
+    weapons: {
+      template: systemPath("templates/sheets/actor/hunter-sheet/weapons.hbs"),
+      scrollable: [""],
+    },
+    abilities: {
+      template: systemPath("templates/sheets/actor/shared/abilities.hbs"),
       scrollable: [""],
     },
     equipment: {
       template: systemPath("templates/sheets/actor/hunter-sheet/equipment.hbs"),
       scrollable: [""],
     },
-    abilities: {
-      template: systemPath("templates/sheets/actor/shared/abilities.hbs"),
+    echoes: {
+      template: systemPath("templates/sheets/actor/hunter-sheet/echoes.hbs"),
       scrollable: [""],
-    },*/
+    },
     effects: {
       template: systemPath("templates/sheets/actor/shared/effects.hbs"),
       scrollable: [""],
@@ -70,16 +71,15 @@ export default class HollowsRPGHunterSheet extends HollowsRPGActorSheet {
     await super._preparePartContext(partId, context, options);
     switch (partId) {
       case "header":
+      case "weapons":
         context.stats = this._getStats(false);
-        context.weapons = await this._getWeapons();
+        context.weapons = await this._prepareWeaponsContext();
         context.weaponsFields = WeaponModel.schema.fields;
-        context.forms = await this._getForms();
+        context.forms = await this._prepareFormsContext();
         context.formsFields = FormModel.schema.fields;
-        //context.characteristics = this._getCharacteristics(false);
-        //context.unfilledSkill = !!this.actor.system._unfilledTraits.skill?.size;
-        //context.skills = this._getSkills();
         break;
     }
+
     return context;
   }
 
@@ -112,7 +112,7 @@ export default class HollowsRPGHunterSheet extends HollowsRPGActorSheet {
    * @returns {Array<ActorSheetItemContext>}
    * @protected
    */
-  async _getWeapons() {
+  async _prepareWeaponsContext() {
     const weapons = [
       ...this.actor.itemTypes.weapon,
     ].sort((a, b) => a.sort - b.sort);
@@ -127,12 +127,12 @@ export default class HollowsRPGHunterSheet extends HollowsRPGActorSheet {
     return context;
   }
 
-    /**
+  /**
    * Prepare the context for forms.
    * @returns {Array<ActorSheetItemContext>}
    * @protected
    */
-  async _getForms() {
+  async _prepareFormsContext() {
     const forms = [
       ...this.actor.itemTypes.form,
     ].sort((a, b) => a.sort - b.sort);
@@ -142,6 +142,26 @@ export default class HollowsRPGHunterSheet extends HollowsRPGActorSheet {
       const formContext = await super._prepareItemContext(form);
       formContext.typeLabel = CONFIG.Item.typeLabels[form.type];
       context.push(formContext);
+    }
+
+    return context;
+  }
+
+  /**
+   * Prepare the context for attacks.
+   * @returns {Array<ActorSheetItemContext>}
+   * @protected
+   */
+  async _prepareAttacksContext() {
+    const attacks = [
+      ...this.actor.itemTypes.attack,
+    ].sort((a, b) => a.sort - b.sort);
+    const context = [];
+
+    for (const attack of attacks) {
+      const attackContext = await super._prepareItemContext(attack);
+      attackContext.typeLabel = CONFIG.Item.typeLabels[attack.type];
+      context.push(attackContext);
     }
 
     return context;

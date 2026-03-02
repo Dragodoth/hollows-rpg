@@ -1,4 +1,5 @@
 /** @import { HollowsRPGActor, HollowsRPGTokenDocument } from "../../documents/_module.mjs"; */
+import DamageRoll from "../../rolls/damage.mjs";
 
 /**
  * A base class for message subtype-specific behavior and data.
@@ -45,7 +46,7 @@ export default class BaseMessageModel extends foundry.abstract.TypeDataModel {
    * @returns {Set<HollowsRPGActor>}
    */
   get targetActors() {
-    return ds.utils.tokensToActors(Array.from(this.targetTokens));
+    //return hollows.utils.tokensToActors(Array.from(this.targetTokens));
   }
 
   /* -------------------------------------------------- */
@@ -87,7 +88,7 @@ export default class BaseMessageModel extends foundry.abstract.TypeDataModel {
     const buttons = [];
     for (let i = 0; i < this.parent.rolls.length; i++) {
       const roll = this.parent.rolls[i];
-      // if (roll instanceof DamageRoll) buttons.push(roll.toRollButton(i));
+      if (roll instanceof DamageRoll) buttons.push(roll.toRollButton(i));
     }
 
     return buttons;
@@ -101,7 +102,7 @@ export default class BaseMessageModel extends foundry.abstract.TypeDataModel {
    * @param {HTMLLIElement} html The pending HTML.
    */
   addListeners(html) {
-    //const damageButtons = html.querySelectorAll(".apply-damage");
-    //for (const damageButton of damageButtons) damageButton.addEventListener("click", (event) => DamageRoll.applyDamageCallback(event));
+    const damageButtons = html.querySelectorAll(".apply-damage");
+    for (const damageButton of damageButtons) damageButton.addEventListener("click", (event) => DamageRoll.applyDamageCallback(event));
   }
 }

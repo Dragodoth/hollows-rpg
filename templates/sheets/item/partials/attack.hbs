@@ -1,0 +1,32 @@
+<fieldset class="flexcol">
+   <legend>{{localize "HOLLOWS_RPG.SHEET.Attack"}}</legend>
+    {{formGroup systemFields.attackStats value=system.attackStats options=stats disabled=isPlay}}
+    {{formGroup systemFields.defences value=system.defences options=defences disabled=isPlay}}
+</fieldset>
+<fieldset class="flexcol">
+   <legend>{{localize "HOLLOWS_RPG.SHEET.Damage"}}</legend>
+    {{#if linkedForm}}
+      <div class="form-group">
+        <label>{{localize "HOLLOWS_RPG.Item.attack.FIELDS.damage.resolve.label"}}</label>
+        <div class="form-input">
+          <input type="number" name="damage.resolve" value="{{damage.resolve}}" min="0" step="1" disabled>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>{{localize "HOLLOWS_RPG.Item.attack.FIELDS.damage.wounds.label"}}</label>
+        <div class="form-input">
+          <input type="number" name="damage.wounds" value="{{damage.wounds}}" min="0" step="1" disabled>
+        </div>
+      </div>
+    {{else}}
+      {{formGroup systemFields.damage.fields.resolve value=system.damage.resolve disabled=isPlay}}
+      {{formGroup systemFields.damage.fields.wounds value=system.damage.wounds disabled=isPlay}}
+    {{/if}}
+</fieldset>
+<fieldset class="flexcol">
+   <legend>{{localize "HOLLOWS_RPG.SHEET.Link"}}</legend>
+    {{formGroup systemFields.weaponLink.fields.useLink value=system.weaponLink.useLink disabled=isPlay}}
+    {{#if system.weaponLink.useLink}}
+    {{formGroup systemFields.weaponLink.fields.link value=system.weaponLink.link disabled=isPlay}}
+    {{/if}}
+</fieldset>

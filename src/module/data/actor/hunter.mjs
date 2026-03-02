@@ -1,5 +1,5 @@
 import HollowsPRGChatMessage from "../../documents/chat-message.mjs";
-import CoreRoll from "../../rolls/core.mjs";
+import { CoreRoll, DamageRoll } from "../../rolls/_module.mjs";
 import BaseActorModel from "./base.mjs";
 
 /**
@@ -93,29 +93,24 @@ export default class HunterModel extends BaseActorModel {
   prepareBaseData() {
     super.prepareBaseData();
 
-    const weaponBonuses = {
-      resolve: 0,
-      wounds: 0,
-      statsPositive: {},
-      statsNegative: "",
-      statChange: 0,
-    };
+    for (const item of this.parent.items) {
+      const bonuses = item.system?.bonuses;
+      if (bonuses) {
+        if (bonuses?.health) {
+          this.health.resolve.max += bonuses.health.resolve;
+          this.health.wounds.max += bonuses.health.wounds;
+        }
 
-    for (const weapon of this.weapons) {
-      const bonuses = weapon.system.bonuses;
-      this.health.resolve.max += bonuses.health.resolve;
-      this.health.wounds.max += bonuses.health.wounds;
-
-      if (bonuses.statChanges.change === "both"){
-        for (const stat of bonuses.statChanges.positive){
-          this.hunter.stats[stat].value += 1;
+        if (bonuses?.stats) {
+          for (const stat of bonuses.stats.modifiedStats){
+          this.hunter.stats[stat].value += bonuses.stats.statBonuses[stat].bonus;
+          }
         }
       }
-      else {
-        this.hunter.stats[bonuses.statChanges.change].value += 2;
-      }
-      this.hunter.stats[bonuses.statChanges.negative].value -= 1;
     }
+
+    if (this.health.resolve.value > this.health.resolve.max) this.health.resolve.value = this.health.resolve.max
+    if (this.health.wounds.value > this.health.wounds.max) this.health.wounds.value = this.health.wounds.max
   }
 
   /* -------------------------------------------------- */
@@ -175,9 +170,16 @@ export default class HunterModel extends BaseActorModel {
    * @param {string} advantageMode   Advantage mode
    * @returns {Promise<DrawSteelChatMessage | null>}
   */
-  async rollStat(stat, options = {}) {
+  async rollStat(options = {}) {
+    const stats = options.stats ? [...options.stats] : ["strong"];
+    const stat = options.stat ??[...stats][0];
     const types = options.types ?? ["explore"];
-    let type = types[0];
+    const defences = options.defences ? [...options.defences] : ["close"];
+    const defence = defences[0];
+    const target = options.target ?? [];
+    const spend = options.spend ?? false;
+    const spendAmount = options.spendAmount ?? 0;
+    let type = options.type ?? types[0];
 
     if (types.length > 1) {
       const buttons = types.reduce((b, action) => {
@@ -185,9 +187,9 @@ export default class HunterModel extends BaseActorModel {
         b.push({ label, icon, action });
         return b;
       }, []);
-      type = await hollows.applications.api.DSDialog.wait({
-        window: { title: game.i18n.localize("DRAW_STEEL.ROLL.Power.ChooseType.Title") },
-        content: game.i18n.localize("DRAW_STEEL.ROLL.Power.ChooseType.Content"),
+      type = await hollows.applications.api.HollowsDialog.wait({
+        window: { title: game.i18n.localize("HOLLOWS_RPG.ROLL.Core.ChooseType.Title") },
+        content: game.i18n.localize("HOLLOWS_RPG.ROLL.Core.ChooseType.Content"),
         buttons,
         rejectClose: true,
       });
@@ -195,23 +197,61 @@ export default class HunterModel extends BaseActorModel {
 
     const evaluation = "evaluate";
     const advantageMode = options.advantageMode ?? "normal";
-    const targetNumber = options.targetNumber ?? 10;
     const useTargetNumber = options.useTargetNumber ?? true;
+    const targetNumber = options.targetNumber ?? 10;
     const data = this.parent.getRollData();
-    const flavor = `${game.i18n.localize(`HOLLOWS_RPG.Actor.Stat.${stat}`)} ${game.i18n.localize(CoreRoll.TYPES[type].label)}`;
 
-    const promptValue = await CoreRoll.prompt({ type, evaluation, data, flavor, stat, targetNumber, useTargetNumber, advantageMode, actor: this.parent, });
+    const promptValue = await CoreRoll.prompt({ type, evaluation, data, stats, stat, defences, defence, targetNumber, useTargetNumber, advantageMode, spend, spendAmount, weaponUuid: options.weaponUuid, actor: this.parent, target });
 
     if (!promptValue) return null;
-    const { rollMode, coreRolls } = promptValue;
+    const { rollMode, coreRoll, flavor } = promptValue;
 
     const messageData = {
       speaker: HollowsPRGChatMessage.getSpeaker({ actor: this.parent }),
       title: flavor,
-      rolls: coreRolls,
+      rolls: [coreRoll],
       sound: CONFIG.sounds.dice,
       flags: { core: { canPopout: true } },
     };
+
+    let weaponData = {}
+    if (options.weaponUuid) {
+      const weapon = await fromUuid(options.weaponUuid);
+      weaponData = weapon.getRollData();
+    }
+
+
+    let formula;
+    let damageType;
+    if (options.damage) {
+      switch (coreRoll.result) {
+        case "success":
+          formula = String(options.damage.resolve);
+          damageType = "resolve";
+          break;
+        case "superiorSuccess":
+          formula = type === "attack" ? String(options.damage.wounds) : null;
+          damageType = "wounds";
+          break;
+        case "criticalSuccess":
+          formula = type === "attack" ? String(options.damage.wounds + 1) : null;
+          damageType = "wounds";
+          break;
+        case "criticalFailure":
+          formula = type != "attack" ? String(options.damage.wounds) : null;
+          damageType = "wounds";
+          break;
+        case "failure":
+          formula = type != "attack" ? String(options.damage.wounds) : null;
+          damageType = "wounds";
+          break;
+      }
+      if (formula) {
+        const damageRoll = new DamageRoll(formula, weaponData, options = {type: damageType, result: coreRoll.result});
+        await damageRoll.evaluate();
+        messageData.rolls.push(damageRoll)
+      }
+    }
     HollowsPRGChatMessage.applyRollMode(messageData, rollMode);
     return HollowsPRGChatMessage.create(messageData);
   }

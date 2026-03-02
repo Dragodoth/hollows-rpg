@@ -120,7 +120,7 @@
 
   }
 
-  section[data-tab="impact"] {
+  section[data-tab="actions"] {
     .power-roll-data {
       display: flex;
       flex-direction: column;

@@ -47,12 +47,22 @@ export default class HollowsRPGItem extends BaseDocumentMixin(foundry.documents.
   /* -------------------------------------------------- */
 
   /**
+   * Generate a DSID from an item name.
+   * @param {string} name A name.
+   * @returns {string} A valid DSID.
+   */
+  static generateHOLLOWSID(name) {
+    return name.replaceAll(/(\w+)([\\|/])(\w+)/g, "$1-$3").slugify({ strict: true });
+  }
+
+  /* -------------------------------------------------- */
+
+  /**
    * Return an item's Draw Steel ID.
    * @type {string}
    */
   get hollowsid() {
     if (this.system._hollowsid) return this.system._hollowsid;
-    const hollowsid = this.name.replaceAll(/(\w+)([\\|/])(\w+)/g, "$1-$3");
-    return hollowsid.slugify({ strict: true });
+    else return this.constructor.generateHOLLOWSID(this.name);
   }
 }

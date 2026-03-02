@@ -1,0 +1,103 @@
+.hollows-rpg {
+  .item-list-container {
+    margin: 10px 0;
+
+    .item-row,
+    .item-header {
+      display: flex;
+      align-items: center;
+      text-align: center;
+    }
+
+    .item-header {
+      background-color: var(--hollows-rpg-c-item-header-bg);
+      border-radius: 5px 5px 0 0;
+      position: sticky;
+      top: 0;
+
+      .item-name {
+        font-weight: bold;
+        font-size: var(--font-size-16);
+      }
+    }
+
+    .item-name {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      text-align: left;
+      padding: 5px 0 5px 5px;
+    }
+
+    .item-controls {
+      display: flex;
+      width: 40px;
+      justify-content: space-evenly;
+      font-size: var(--font-size-16);
+    }
+
+    .item-list {
+      background-color: var(--hollows-rpg-c-item-list-bg);
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      .item {
+        &:nth-child(even) {
+          background-color: var(--hollows-rpg-c-item-alternating-bg);
+        }
+
+        .item-row {
+          .item-name {
+            gap: 5px;
+
+            &.rollable {
+              cursor: var(--cursor-pointer);
+
+              &:hover .label {
+                text-shadow: 0 0 8px var(--color-shadow-primary);
+              }
+            }
+
+            .name {
+              .label {
+                font-weight: bold;
+                font-size: var(--font-size-15);
+              }
+            }
+
+            img {
+              width: 30px;
+              height: 30px;
+              border: none;
+            }
+          }
+          .item-controls > * {
+            line-height: 40px;
+          }
+        }
+
+        .document-description {
+          display: grid;
+          grid-template-rows: 0fr;
+          transition: grid-template-rows .15s linear;
+          padding: 0 5px 0 5px;
+
+          &.expanded {
+            grid-template-rows: 1fr;
+          }
+
+          & > div, & > document-embed {
+            overflow: hidden;
+            display: grid;
+            grid-template-rows: repeat(2, 1fr);
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            width: 100%;
+            height: 100%;
+          }
+        }
+      }
+    }
+  }
+}

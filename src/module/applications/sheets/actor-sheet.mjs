@@ -19,7 +19,7 @@ export default class HollowsRPGActorSheet extends HollowsDocumentSheet {
   static DEFAULT_OPTIONS = {
     classes: ["actor"],
     position: {
-      width: 700,
+      width: 800,
       height: 600,
     },
         actions: {
@@ -28,7 +28,8 @@ export default class HollowsRPGActorSheet extends HollowsDocumentSheet {
       ...sheets.ActorSheet.DEFAULT_OPTIONS.actions,
       toggleStatus: this.#toggleStatus,
       toggleEffect: this.#toggleEffect,
-      roll: this.#onRoll
+      roll: this.#onRoll,
+      useItem: this.#useItem,
     },
     window: {
       controls: [
@@ -70,13 +71,14 @@ export default class HollowsRPGActorSheet extends HollowsDocumentSheet {
   static TABS = {
     primary: {
       tabs: [
+        { id: "weapons" },
         { id: "abilities" },
         { id: "equipment" },
         { id: "echoes" },
         { id: "effects" },
         { id: "biography" },
       ],
-      initial: "abilities",
+      initial: "weapons",
       labelPrefix: "HOLLOWS_RPG.Actor.Tabs",
     },
   };
@@ -139,6 +141,7 @@ export default class HollowsRPGActorSheet extends HollowsDocumentSheet {
       }
 
       if (this.actor.type !== "hunter") {
+        delete tabs.weapons;
         delete tabs.equipment;
         delete tabs.echoes;
       }
@@ -402,7 +405,7 @@ export default class HollowsRPGActorSheet extends HollowsDocumentSheet {
         condition: () => this.isPlayMode,
         callback: async (target) => {
           const document = this._getEmbeddedDocument(target);
-          await document.sheet.render({ force: true, mode: DSDocumentSheet.MODES.PLAY });
+          await document.sheet.render({ force: true, mode: HollowsDocumentSheet.MODES.PLAY });
         },
       },
       {
@@ -411,7 +414,7 @@ export default class HollowsRPGActorSheet extends HollowsDocumentSheet {
         condition: () => this.isEditMode,
         callback: async (target) => {
           const document = this._getEmbeddedDocument(target);
-          await document.sheet.render({ force: true, mode: DSDocumentSheet.MODES.EDIT });
+          await document.sheet.render({ force: true, mode: HollowsDocumentSheet.MODES.EDIT });
         },
       },
       {
@@ -575,10 +578,16 @@ export default class HollowsRPGActorSheet extends HollowsDocumentSheet {
     event.preventDefault();
     const dataset = target.dataset;
 
+
     // Handle item rolls.
     switch (dataset.rollType) {
       case "stat":
-        return this.actor.rollStat(dataset.stat);;
+        const stat = dataset.stat;
+        return this.actor.rollStat({stat});
+      case "item":
+        const item = this._getEmbeddedDocument(target);
+        await item.system.use()
+        break;
     }
   }
 
@@ -606,10 +615,10 @@ export default class HollowsRPGActorSheet extends HollowsDocumentSheet {
    * @param {HTMLElement} target   The capturing HTML element which defined a [data-action].
    * @protected
    */
-  static async #useAbility(event, target) {
+  static async #useItem(event, target) {
     const item = this._getEmbeddedDocument(target);
-    if (item?.type !== "ability") {
-      console.error("This is not an ability!", item);
+    if (item?.type !== "weapon") {
+      console.error("This is not an weapon!", item);
       return;
     }
     await item.system.use({ event });

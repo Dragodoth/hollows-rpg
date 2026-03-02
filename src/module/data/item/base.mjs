@@ -1,4 +1,6 @@
+import {systemPath} from "../../constants.mjs";
 import enrichHTML from "../../utils/enrich-html.mjs";
+import {validateHOLLOWSID} from "../helpers.mjs";
 import HollowsRPGSystemModel from "../system-model.mjs";
 
 /** @import HollowsRPGActor from "../../documents/actor.mjs" */
@@ -19,6 +21,9 @@ export default class BaseItemModel extends HollowsRPGSystemModel {
       type: "base",
       invalidActorTypes: [],
       packOnly: false,
+      embedded: {
+        Action: "system.actions",
+      },
     };
   }
 
@@ -38,7 +43,12 @@ export default class BaseItemModel extends HollowsRPGSystemModel {
      * The Draw Steel ID, indicating a unique game rules element.
      * @remarks `readonly: true` makes this non-iterable
      */
-    schema._hollowsid = new fields.StringField({ required: true, readonly: true });
+    schema._hollowsid = new fields.StringField({
+      required: true,
+      readonly: true,
+      validate: validateHOLLOWSID,
+      validationError: game.i18n.localize("DRAW_STEEL.SOURCE.InvalidDSID"),
+    });
 
     return schema;
   }
@@ -72,7 +82,6 @@ export default class BaseItemModel extends HollowsRPGSystemModel {
   /** @inheritdoc */
   prepareDerivedData() {
     super.prepareDerivedData();
-
   }
 
   /* -------------------------------------------------- */
@@ -95,9 +104,10 @@ export default class BaseItemModel extends HollowsRPGSystemModel {
 
     const defaultName = game.i18n.localize(CONFIG.Item.typeLabels[data.type]);
 
-    if (!this._hollowsid && !data.name.startsWith(defaultName)) updates._hollowsid = data.name.slugify({ strict: true });
-
+    if (!this._hollowsid && !data.name.startsWith(defaultName)) updates._dsid = this.parent.constructor.generateHOLLOWSID(data.name);
+    console.log(data)
     if (!foundry.utils.isEmpty(updates)) this.updateSource(updates);
+
   }
 
   /* -------------------------------------------------- */
@@ -111,6 +121,48 @@ export default class BaseItemModel extends HollowsRPGSystemModel {
     embed.innerHTML = enriched;
 
     return embed;
+  }
+
+  /* -------------------------------------------------- */
+
+  /**
+   * Use an ability, generating a chat message and potentially making a power roll.
+   * @param {Partial<AbilityUseOptions>} [options={}] Configuration.
+   * @returns {Promise<DrawSteelChatMessage[] | null>}
+   * TODO: Add hooks based on discussion with module authors.
+   */
+  async use(options = {}) {
+    const actions = this.actions;
+    if (!actions.size) {
+      ui.notifications.warn("HOLLOWS_RPG.Item.Error.NoActions", { localize: true });
+      return;
+    }
+
+    let action = Array.from(actions)[0];
+    if (actions.size > 1) {
+
+      const context = {}
+      context.actions = actions;
+
+      const promptValue = await hollows.applications.apps.ActionChoiceDialog.create({
+        context,
+        window: {
+          title: game.i18n.format("HOLLOWS_RPG.ROLL.Core.Prompt.Title"),
+        },
+      });
+    if (!promptValue) return null;
+    action = await fromUuid(promptValue.actionUuid);
+    }
+    await action.use();
+  }
+
+  /* -------------------------------------------------- */
+
+  /**
+   * An alias of {@linkcode use}.
+   */
+  async roll(options = {}) {
+    this.system.use(options);
   }
 
   /* -------------------------------------------------- */

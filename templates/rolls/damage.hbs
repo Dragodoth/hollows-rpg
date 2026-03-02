@@ -1,0 +1,9 @@
+<div class="dice-roll" data-action="expandRoll">
+  {{#if flavor}}
+  <div class="dice-flavor">{{flavor}}</div>
+  {{/if}}
+  <div class="dice-result {{health.class}}" data-tooltip-text="{{formula}}">
+      <div class="dice-total">{{localize "HOLLOWS_RPG.ChatMessage.damage.DamageResult" damage=total type=health.label }}</div>
+    {{{tooltip}}}
+  </div>
+</div>

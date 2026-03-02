@@ -1,0 +1,25 @@
+<fieldset class="flexcol">
+  <legend>{{localize "HOLLOWS_RPG.PSEUDO.SHEET.Type"}}</legend>
+  {{formGroup fields.attackType value=pseudo.attackType options=types}}
+</fieldset>
+<fieldset class="flexcol">
+  <legend>{{localize "HOLLOWS_RPG.PSEUDO.SHEET.Attack"}}</legend>
+  {{formGroup fields.attackStats value=pseudo.attackStats options=stats}}
+  {{#if (eq pseudo.attackType "defence")}}
+    {{formGroup fields.defences value=pseudo.defences options=defences}}
+  {{/if}}
+  {{#if (eq pseudo.attackType "targetNumber")}}
+    {{formGroup fields.targetNumber value=pseudo.targetNumber}}
+  {{/if}}
+</fieldset>
+<fieldset class="flexcol">
+  <legend>{{localize "HOLLOWS_RPG.PSEUDO.SHEET.Damage.label"}}</legend>
+  {{#if pseudo.item.system.form}}
+  <span class="hint">{{localize "HOLLOWS_RPG.PSEUDO.SHEET.Damage.fromForm" form=pseudo.item.system.form.name}}</span>
+    {{formGroup fields.damage.fields.resolve value=pseudo.damage.resolve disabled=true}}
+    {{formGroup fields.damage.fields.wounds value=pseudo.damage.wounds disabled=true}}
+  {{else}}
+    {{formGroup fields.damage.fields.resolve value=pseudo.damage.resolve}}
+    {{formGroup fields.damage.fields.wounds value=pseudo.damage.wounds}}
+  {{/if}}
+</fieldset>

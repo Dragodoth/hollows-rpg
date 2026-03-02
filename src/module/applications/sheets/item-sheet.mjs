@@ -2,6 +2,7 @@ import { systemPath } from "../../constants.mjs";
 import { HollowsRPGChatMessage } from "../../documents/_module.mjs";
 import enrichHTML from "../../utils/enrich-html.mjs";
 import HollowsDocumentSheet from "../api/document-sheet.mjs";
+import BaseAction from "../../data/pseudo-documents/actions/base-action.mjs";
 
 /**
  * @import ProseMirrorEditor from "@client/applications/ux/prosemirror-editor.mjs";
@@ -40,6 +41,7 @@ export default class HollowsRPGItemSheet extends HollowsDocumentSheet {
       tabs: [
         { id: "description" },
         { id: "details" },
+        { id: "actions" },
         { id: "effects" },
       ],
       initial: "description",
@@ -66,6 +68,10 @@ export default class HollowsRPGItemSheet extends HollowsDocumentSheet {
     details: {
       template: systemPath("templates/sheets/item/details.hbs"),
       scrollable: [""],
+    },
+    actions: {
+      template: systemPath("templates/sheets/item/actions.hbs"),
+      scrollable: [""],
     }
   };
 
@@ -83,7 +89,7 @@ export default class HollowsRPGItemSheet extends HollowsDocumentSheet {
 
   /** @inheritdoc */
   _configureRenderParts(options) {
-    const { header, tabs, description, details} = super._configureRenderParts(options);
+    const { header, tabs, description, details, actions} = super._configureRenderParts(options);
 
     const parts = { header, tabs };
 
@@ -94,6 +100,7 @@ export default class HollowsRPGItemSheet extends HollowsDocumentSheet {
     if (!this.#editor && itemModel.schema.has("description")) parts.description = description;
     if (this.item.limited) return;
     if (this.item.system.constructor.metadata.detailsPartial) parts.details = details;
+    parts.actions = actions;
     return parts;
   }
 
@@ -131,7 +138,8 @@ export default class HollowsRPGItemSheet extends HollowsDocumentSheet {
         break;
       case "advancement":
         break;
-      case "impact":
+      case "actions":
+        context.actionIcon = BaseAction.metadata.icon;
         break;
       case "effects":
         break;
@@ -398,8 +406,8 @@ export default class HollowsRPGItemSheet extends HollowsDocumentSheet {
     switch (pseudo.documentName) {
       case "Advancement":
         return (await this._onDropAdvancement(event, pseudo)) ?? null;
-      case "PowerRollEffect":
-        return (await this._onDropPowerRollEffect(event, pseudo)) ?? null;
+      case "Action":
+        return (await this._onDropAction(event, pseudo)) ?? null;
     }
     return null;
   }

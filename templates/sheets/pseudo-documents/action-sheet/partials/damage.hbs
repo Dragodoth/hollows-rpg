@@ -1,0 +1,10 @@
+<fieldset class="flexcol">
+  <legend>{{localize "HOLLOWS_RPG.PSEUDO.SHEET.Damage.label"}}</legend>
+  {{formGroup fields.damage.fields.type value=pseudo.damage.type options=types}}
+  {{#if (eq pseudo.damage.type "resolve")}}
+    {{formGroup fields.damage.fields.resolve value=pseudo.damage.resolve}}
+  {{/if}}
+  {{#if (eq pseudo.damage.type "wounds")}}
+    {{formGroup fields.damage.fields.wounds value=pseudo.damage.wounds}}
+  {{/if}}
+</fieldset>

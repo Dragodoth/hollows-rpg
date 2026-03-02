@@ -1,0 +1,51 @@
+.hollows-rpg.action-choice-dialog {
+  .group {
+    display: flex;
+    flex-direction: column;
+
+    .header {
+      text-align: center;
+      font-weight: bold;
+      margin-bottom: 5px;
+      font-size: var(--font-size-16);
+    }
+
+    .buttons {
+      display: flex;
+      flex: 1;
+      border-radius: 5px;
+      gap: 15px;
+      cursor: pointer;
+      padding: 5px;
+      transition: all 0.3s ease;
+      justify-content: flex-start;
+      border-color: var(--button-border-color);
+
+      &.selected {
+        background: var(--button-hover-background-color);
+        color: var(--button-hover-text-color);
+      }
+
+      .action-image {
+          width: 35px;
+          height: 35px;
+          border: none;
+        }
+
+      .label {
+        display: flex;
+        flex-direction: column;
+        padding: 5px;
+        gap: 5px;
+        align-items: flex-start;
+
+        .name {
+          font-style: normal;
+          font-weight: 400;
+          font-size: var(--font-size-14);
+          line-height: 17px;
+        }
+      }
+    }
+  }
+}

@@ -19,6 +19,7 @@ export default class CoreRollDialog extends RollDialog {
     },
     actions: {
       updateAdvantageMode: this.#updateAdvantageMode,
+      updateUseTargetNumber: this.#updateUseTargetNumber,
     },
   };
 
@@ -50,8 +51,9 @@ export default class CoreRollDialog extends RollDialog {
       await this._prepareStatOptions(context);
 
       if (context.type === "explore") await this._prepareEquipmentOptions(context);
+      if (context.type === "attack") await this._prepareDefenceOptions(context);
     }
-
+    console.log(context)
     return context;
   }
 
@@ -67,8 +69,28 @@ export default class CoreRollDialog extends RollDialog {
    * @param {object} context
    */
   async _prepareStatOptions(context) {
-    const stats = hollows.CONFIG.stats;
-    context.statOptions = hollows.CONFIG.stats
+
+    const stats = foundry.utils.deepClone(hollows.CONFIG.stats)
+    if (context.type === "attack")  {
+    for (const stat of Object.keys(stats)){
+      if (!context.stats.includes(stat)) delete stats[stat]
+      }
+    }
+    context.statOptions = stats;
+  }
+
+  /* -------------------------------------------------- */
+
+  /**
+   * Prepare the ability context by generating the ability Item and damageOptions.
+   * @param {object} context
+   */
+  async _prepareDefenceOptions(context) {
+    const defences = foundry.utils.deepClone(hollows.CONFIG.defences)
+    for (const defence of Object.keys(defences)){
+      if (!context.defences.includes(defence)) delete defences[defence]
+    }
+    context.defenceOptions = defences;
   }
 
   /* -------------------------------------------------- */
@@ -95,6 +117,9 @@ export default class CoreRollDialog extends RollDialog {
     const newStat = formData.stat;
     this.options.context.stat = newStat;
 
+    const newDefence = formData.defence;
+    this.options.context.defence = newDefence;
+
     let newTargetNumber = formData.targetNumber;
     if (newTargetNumber < 1 || newTargetNumber > 20){
       ui.notifications.error(game.i18n.localize("HOLLOWS_RPG.ROLL.Core.Prompt.tnError"));
@@ -102,8 +127,7 @@ export default class CoreRollDialog extends RollDialog {
     }
     this.options.context.targetNumber = newTargetNumber;
 
-    const newUseTargetNumber = formData.useTargetNumber;
-    this.options.context.useTargetNumber = newUseTargetNumber;
+    console.log(this.options.context)
 
     this.render();
   }
@@ -116,10 +140,10 @@ export default class CoreRollDialog extends RollDialog {
 
     const config = {
       stat: formData.stat,
+      defence: formData.defence,
       advantageMode: this.options.context.advantageMode,
       targetNumber: formData.targetNumber,
-      useTargetNumber: formData.useTargetNumber,
-      damage: null,
+      useTargetNumber: this.options.context.useTargetNumber,
       rollMode: this.options.context.rollMode,
     };
 
@@ -131,6 +155,14 @@ export default class CoreRollDialog extends RollDialog {
     const oldAdvantageMode = this.options.context.advantageMode;
 
     this.options.context.advantageMode = newAdvantageMode === oldAdvantageMode ? "normal" : newAdvantageMode;
+    this.render();
+  }
+
+  static #updateUseTargetNumber(_, button) {
+    const newUseTargetNumber = button.dataset.usetargetnumber === "true";
+    const oldUseTargetNumber = this.options.context.useTargetNumber;
+    console.log(this.options.context.useTargetNumber,newUseTargetNumber,oldUseTargetNumber)
+    this.options.context.useTargetNumber = newUseTargetNumber === oldUseTargetNumber ? false : true;
     this.render();
   }
 }

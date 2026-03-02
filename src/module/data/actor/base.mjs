@@ -71,8 +71,6 @@ export default class BaseActorModel extends HollowsPRGSystemModel {
   prepareDerivedData() {
     super.prepareDerivedData();
 
-    // Apply resolve bonuses before calculating winded
-    // this.resolve.max += this.stamina.bonuses;
   }
 
   /* -------------------------------------------------- */
@@ -143,6 +141,16 @@ export default class BaseActorModel extends HollowsPRGSystemModel {
   /* -------------------------------------------------- */
 
   /**
+   * Returns all of the actor's weapons.
+   * @returns {Array<Omit<HollowsRPGItem, "type" | "system"> & { type: "weapon", system: import("../item/weapon.mjs").default }>}
+   */
+  get attacks() {
+    return this.parent.itemTypes.attack;
+  }
+
+  /* -------------------------------------------------- */
+
+  /**
    * Update the health type effects based on updated health type values.
    * @param {string} healthType   The type of health updated.
    */
@@ -197,47 +205,30 @@ export default class BaseActorModel extends HollowsPRGSystemModel {
 
   /* -------------------------------------------------- */
 
-
   /**
    * Deal damage to the actor, accounting for immunities and resistances.
    * @param {number} damage    The amount of damage to take.
+   * @param {string} type      Type of health to be damaged.
    * @param {object} [options] Options to modify the damage application.
-   * @param {string} [options.type]   Valid damage type.
-   * @param {Array<string>} [options.ignoredImmunities]  Which damage immunities to ignore.
    * @returns {Promise<DrawSteelActor | DrawSteelCombatantGroup>}
    */
-  async takeDamage(damage, options = {}) {
+  async takeDamage(damage, type, options = {}) {
 
     if (damage === 0) {
-      ui.notifications.info("DRAW_STEEL.Actor.DamageNotification.ImmunityReducedToZero", { format: { name: this.parent.name } });
+      ui.notifications.info("HOLLOWS_RPG.Actor.DamageNotification.ImmunityReducedToZero", { format: { name: this.parent.name } });
       return this.parent;
     }
 
-    const damageTypeOption = { hollows: { damageType: options.type } };
-    if (this.isMinion) {
-      const combatGroups = this.combatGroups;
-      if (combatGroups.size === 1) {
-        return this.combatGroup.update({ "system.staminaValue": this.combatGroup.system.staminaValue - damage }, damageTypeOption);
-      }
-      else if (combatGroups.size === 0) {
-        ui.notifications.warn("DRAW_STEEL.CombatantGroup.Error.MinionNoSquad", { localize: true });
-      }
-      else {
-        ui.notifications.warn("DRAW_STEEL.CombatantGroup.Error.TooManySquad", { localize: true });
-      }
-    }
-    // If there's damage left after weakness/immunities, apply damage to temporary stamina then stamina value
-    const staminaUpdates = {};
-    const damageToTempStamina = Math.min(damage, this.stamina.temporary);
-    staminaUpdates.temporary = Math.max(0, this.stamina.temporary - damageToTempStamina);
+    const healthUpdates = {};
 
-    const remainingDamage = Math.max(0, damage - damageToTempStamina);
-    if (remainingDamage > 0) staminaUpdates.value = this.stamina.value - remainingDamage;
+    // Apply damage to temporary health type then health type value
+    const damageToTempHealth = Math.min(damage, this.health[type].temporary);
+    healthUpdates.temporary = Math.max(0, this.health[type].temporary - damageToTempHealth);
 
-    return this.parent.update({ "system.stamina": staminaUpdates }, damageTypeOption);
+    const remainingDamage = Math.max(0, damage - damageToTempHealth);
+    if (remainingDamage > 0) healthUpdates.value = this.health[type].value - remainingDamage;
+
+    if (type === 'resolve') return this.parent.update({ "system.health.resolve": healthUpdates });
+    if (type === 'wounds') return this.parent.update({ "system.health.wounds": healthUpdates });
   }
-
-  /* -------------------------------------------------- */
-
-
 }

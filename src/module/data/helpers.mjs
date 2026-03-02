@@ -1,5 +1,5 @@
 
-const { NumberField, StringField } = foundry.data.fields;
+const { NumberField, StringField, ObjectField } = foundry.data.fields;
 
 /**
  * Constructs a number field that is always a number with a min of 0.
@@ -22,3 +22,29 @@ export const requiredInteger = ({ initial = 0, min = 0, max, label } = {}) => ne
  * @returns A string field that is always truthy.
  */
 export const setOptions = ({ choices, validate } = {}) => new StringField({ required: true, blank: false, choices, validate });
+
+/* -------------------------------------------------- */
+
+/**
+ * Constructs a string field for use inside of a SetField.
+ * @param {object} [options] Options to forward to the field.
+ * @param {Record<string, string>} [options.choices] CONST-derived choices for the field.
+ * @param {Function} [options.validate] A validator function for field values.
+ * @returns A string field that is always truthy.
+ */
+export const setObjectOptions = ({ choices, validate } = {}) => new ObjectField({ required: true, blank: false, choices, validate });
+
+/* -------------------------------------------------- */
+
+/**
+ * Validates if a DSID fulfills our parameters.
+ * @param {string} hollowsid
+ */
+export const validateHOLLOWSID = (hollowsid) => {
+  // Valid slug
+  const slug = hollowsid.slugify({ strict: true });
+  // multi-slugging can continue to mutate, this checks if the mutation is *only* from the middle mutation.
+  const reSlug = hollowsid.replace(/[\s-]+/g, "-");
+
+  return [hollowsid, reSlug].includes(slug);
+};

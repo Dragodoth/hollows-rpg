@@ -163,59 +163,22 @@
     }
   }
 
-  [data-application-part="features"] {
 
-    .feature-list-container {
+  [data-application-part="weapons"] {
+      .weapon-list-container {
 
-      .item-type,
-      .item-subtype {
-        width: 100px;
+        .item-bonus {
+          width: 150px;
+        }
       }
-    }
-  }
+      .form-list-container {
 
-  [data-application-part="equipment"] {
-    .kit-list-container {
-
-      .item-melee-bonus,
-      .item-ranged-bonus {
-        width: 150px;
-      }
-    }
-
-    .treasure-list-container {
-
-      .item-echelon {
-        width: 100px;
-      }
-
-      .item-quantity {
-        width: 75px;
-
-        &.quantity-controls {
-          display: flex;
-
-          a[data-action="modifyItemQuantity"] {
-            padding: 0 5px;
-          }
-
-          .quantity {
-            flex-grow: 1;
-          }
+        .item-bonus {
+          width: 150px;
         }
       }
     }
-  }
 
-  [data-application-part="projects"] .item-list-container {
-    .item-type {
-      width: 75px;
-    }
-
-    .item-points {
-      width: 100px;
-    }
-  }
 
   [data-application-part="effects"] {
     &.standard-form { padding-top: 0; }

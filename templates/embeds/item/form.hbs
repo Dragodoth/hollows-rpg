@@ -1,0 +1,13 @@
+<fieldset class="description" style="grid-area: 1/1/3/3;">
+   <legend>{{systemFields.description.fields.value.label}}</legend>
+  {{{enrichedDescription}}}
+</fieldset>
+<fieldset class="damage" style="grid-area: 1/3/3/4;">
+  <legend>{{systemFields.damage.label}}</legend>
+  <dl>
+      <dt class="stamina-bonus">{{systemFields.damage.fields.resolve.label}}</dt>
+      <dd class="stamina-bonus">{{numberFormat system.damage.wounds}}</dd>
+      <dt class="stamina-bonus">{{systemFields.damage.fields.wounds.label}}</dt>
+      <dd class="stamina-bonus">{{numberFormat system.damage.wounds}}</dd>
+  </dl>
+</fieldset>

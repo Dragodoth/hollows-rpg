@@ -4,9 +4,7 @@
  * @import Collection from "@common/utils/collection.mjs";
  */
 
-import BaseAdvancement from "../data/pseudo-documents/advancements/base-advancement.mjs";
-import BasePowerRollEffect from "../data/pseudo-documents/power-roll-effects/base-power-roll-effect.mjs";
-
+import BaseAction from "../data/pseudo-documents/actions/base-action.mjs";
 /**
  * Specialized collection type for stored data models.
  * @param {Array<string, DataModel>} entries    Array containing the data models to store.
@@ -42,6 +40,7 @@ export default class ModelCollection extends foundry.utils.Collection {
    * @type {Record<string, typeof PseudoDocument>}
    */
   static documentClasses = {
+    Action: BaseAction,
   };
 
   /* -------------------------------------------------- */

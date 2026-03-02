@@ -1,0 +1,17 @@
+<section class="standard-form">
+  <p class="hint">{{localize "HOLLOWS_RPG.Actor.entity.DefenceInput.Hint"}}</p>
+  <div class="form-group">
+    <div class="form-group stacked row-labels">
+      <span class="empty">&nbsp;</span>
+      <span class="label">{{localize "HOLLOWS_RPG.Actor.entity.DefenceInput.Rows.Input"}}</span>
+    </div>
+    {{#each defences}}
+    <div class="form-group stacked">
+      <label>{{field.label}}</label>
+      <div class="form-fields">
+        {{formInput field value=value placeholder="10"}}
+      </div>
+    </div>
+    {{/each}}
+  </div>
+</section>

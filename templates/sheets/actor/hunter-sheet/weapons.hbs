@@ -1,0 +1,140 @@
+{{! Weapons Tab }}
+<section class="tab weapons {{tab.cssClass}}" data-group="primary" data-tab="weapons">
+  {{! Weapons List}}
+  {{#if (or weapons weapons.length)}}
+  <section class="item-list-container weapon-list-container">
+    <div class="item-header">
+      <div class="item-column item-name">{{localize "TYPES.Item.weapon"}}</div>
+      <div class="item-column item-bonus">{{localize "TYPES.Item.form"}}</div>
+      <div class="item-column item-bonus">{{localize "HOLLOWS_RPG.Item.weapon.FIELDS.resource.label"}}</div>
+      <div class="item-column item-controls">
+        {{#unless isPlay}}
+          {{#with (localize "HOLLOWS_RPG.SHEET.Add" itemName=(localize "TYPES.Item.weapon")) as |addItemTooltip|}}
+          <a class="createDoc" data-action="createDoc" data-document-class="Item" data-type="weapon" data-render-sheet="true" data-tooltip-text="{{addItemTooltip}}">
+            <i class="fa-solid fa-plus"></i>
+          </a>
+          {{/with}}
+        {{/unless}}
+      </div>
+    </div>
+    <ol class="item-list weapon-list">
+      {{#each weapons as |weaponContext|}}
+      <li class="item feature draggable expandable-document" data-document-uuid="{{weaponContext.item.uuid}}">
+        <div class="item-row">
+          <div class="item-column item-name rollable {{disabled (not @root.owner)}}" data-action="useItem">
+            <img class="item-image" src="{{weaponContext.item.img}}" alt="{{weaponContext.item.name}}">
+            <div class="name">
+              <div class="label">{{weaponContext.item.name}}</div>
+            </div>
+          </div>
+          <div class="item-column item-bonus">{{weaponContext.item.system.form.name}}</div>
+          <div class="item-column item-bonus">{{weaponContext.item.system.resource.name}}
+            {{#if ( eq weaponContext.item.system.resource.type "token")}}
+              {{#if weaponContext.item.system.resource.state}}
+                <i class="fa-regular fa-circle-check"></i>
+              {{else}}
+                <i class="fa-regular fa-circle-xmark"></i>
+              {{/if}}
+            {{/if}}
+            {{#if ( eq weaponContext.item.system.resource.type "counter")}}
+              {{weaponContext.item.system.resource.value}}/{{weaponContext.item.system.resource.max}}
+            {{/if}}
+          </div>
+          <div class="item-column item-controls">
+            <a class="fa-fw fa-solid fa-ellipsis-vertical" data-action="documentListContext"></a>
+            <a class="fa-fw fa-solid fa-angle-{{ifThen weaponContext.item.expanded "down" "right"}}" data-action="toggleDocumentDescription"></a>
+          </div>
+        </div>
+          <div class="document-description item-embed standard-form {{#if weaponContext.item.expanded}}expanded{{/if}}">
+          {{#if weaponContext.expanded}}{{{weaponContext.embed.outerHTML}}}{{/if}}
+        </div>
+      </li>
+      {{/each}}
+    </ol>
+  </section>
+  {{/if}}
+
+  {{! Forms List}}
+  {{#if (or forms forms.length)}}
+  <section class="item-list-container form-list-container">
+    <div class="item-header">
+      <div class="item-column item-name">{{localize "TYPES.Item.form"}}</div>
+      <div class="item-column item-bonus">{{localize "TYPES.Item.weapon"}}</div>
+      <div class="item-column item-bonus">{{formsFields.damage.label}}</div>
+      <div class="item-column item-controls">
+        {{#unless isPlay}}
+        {{#with (localize "HOLLOWS_RPG.SHEET.Add" itemName=(localize "TYPES.Item.form")) as |addItemTooltip|}}
+        <a class="createDoc" data-action="createDoc" data-document-class="Item" data-type="form" data-render-sheet="true" data-tooltip-text="{{addItemTooltip}}">
+          <i class="fa-solid fa-plus"></i>
+        </a>
+        {{/with}}
+        {{/unless}}
+      </div>
+    </div>
+    <ol class="item-list form-list">
+      {{#each forms as |formContext|}}
+      <li class="item feature draggable expandable-document" data-document-uuid="{{formContext.item.uuid}}">
+        <div class="item-row">
+          <div class="item-column item-name">
+            <img class="item-image" src="{{formContext.item.img}}" alt="{{formContext.item.name}}">
+            <div class="name">
+              <div class="label">{{formContext.item.name}}</div>
+            </div>
+          </div>
+          <div class="item-column item-bonus">{{formContext.item.system.weapon.name}}</div>
+          <div class="item-column item-bonus">{{numberFormat formContext.item.system.damage.resolve}}/{{numberFormat formContext.item.system.damage.wounds}}</div>
+          <div class="item-column item-controls">
+            <a class="fa-fw fa-solid fa-ellipsis-vertical" data-action="documentListContext"></a>
+            <a class="fa-fw fa-solid fa-angle-{{ifThen formContext.item.expanded "down" "right"}}" data-action="toggleDocumentDescription"></a>
+          </div>
+        </div>
+          <div class="document-description item-embed standard-form {{#if formContext.item.expanded}}expanded{{/if}}">
+          {{#if formContext.expanded}}{{{formContext.embed.outerHTML}}}{{/if}}
+        </div>
+      </li>
+      {{/each}}
+    </ol>
+  </section>
+  {{/if}}
+
+  {{! Attacks List}}
+  {{#if (or attacks attacks.length)}}
+  <section class="item-list-container form-list-container">
+    <div class="item-header">
+      <div class="item-column item-name">{{localize "TYPES.Item.attack"}}</div>
+      <div class="item-column item-bonus">{{localize "TYPES.Item.weapon"}}</div>
+      <div class="item-column item-controls">
+        {{#unless isPlay}}
+        {{#with (localize "HOLLOWS_RPG.SHEET.Add" itemName=(localize "TYPES.Item.attack")) as |addItemTooltip|}}
+        <a class="createDoc" data-action="createDoc" data-document-class="Item" data-type="attack" data-render-sheet="true" data-tooltip-text="{{addItemTooltip}}">
+          <i class="fa-solid fa-plus"></i>
+        </a>
+        {{/with}}
+        {{/unless}}
+      </div>
+    </div>
+    <ol class="item-list form-list">
+      {{#each attacks as |attackContext|}}
+      <li class="item feature draggable expandable-document" data-document-uuid="{{attackContext.item.uuid}}">
+        <div class="item-row">
+          <div class="item-column item-name">
+            <img class="item-image" src="{{attackContext.item.img}}" alt="{{attackContext.item.name}}">
+            <div class="name">
+              <div class="label">{{attackContext.item.name}}</div>
+            </div>
+          </div>
+          <div class="item-column item-bonus">{{attackContext.item.system.weapon.name}}</div>
+          <div class="item-column item-controls">
+            <a class="fa-fw fa-solid fa-ellipsis-vertical" data-action="documentListContext"></a>
+            <a class="fa-fw fa-solid fa-angle-{{ifThen attackContext.item.expanded "down" "right"}}" data-action="toggleDocumentDescription"></a>
+          </div>
+        </div>
+          <div class="document-description item-embed standard-form {{#if attackContext.item.expanded}}expanded{{/if}}">
+          {{#if attackContext.expanded}}{{{attackContext.embed.outerHTML}}}{{/if}}
+        </div>
+      </li>
+      {{/each}}
+    </ol>
+  </section>
+  {{/if}}
+</section>

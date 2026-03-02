@@ -1,25 +1,48 @@
 <section>
   <div class="global group form-group">
-    <div class="modifiers">
-      <div>
-          <label for="stat">{{localize "HOLLOWS_RPG.ROLL.Core.Prompt.chooseStat.label"}}</label>
+    {{#unless (eq statOptions.size 1)}}
+      <div class="form-group modifiers">
+        <div>
+          <label for="stat">{{localize "HOLLOWS_RPG.ROLL.Core.Prompt.chooseStat"}}</label>
           <select name="stat">
             {{selectOptions statOptions selected=stat}}
           </select>
         </div>
       </div>
+    {{/unless}}
+    {{#if (eq type "attack")}}
       <div class="form-group modifiers">
-        <div class="form-fields {{#unless useTargetNumber}}hidden {{/unless}}">
-          <label for="targetNumber">{{localize "HOLLOWS_RPG.ROLL.Core.Prompt.targetNumber.label"}}</label>
+          {{#unless (eq defenceOptions.size 1)}}
+            <div>
+              <label for="defence">{{localize "HOLLOWS_RPG.ROLL.Core.Prompt.chooseDefence"}}</label>
+              <select name="defence">
+                {{selectOptions defenceOptions selected=defence}}
+              </select>
+            </div>
+          </div>
+        {{/unless}}
+      </div>
+    {{else}}
+      <div class="form-group modifiers">
+        <button type="button" class="buttons {{#if useTargetNumber}}selected{{/if}}"
+        data-action="updateUseTargetNumber" data-usetargetnumber="true">
+        {{#if useTargetNumber}}
+          <span><i class="fa-solid fa-circle"></i></span>
+        {{else}}
+          <span><i class="fa-regular fa-circle"></i></span>
+        {{/if}}
+        <span class="label">{{localize "HOLLOWS_RPG.ROLL.Core.Prompt.useTargetNumber"}}</span>
+        </button>
+      </div>
+      <div class="form-group modifiers {{#unless useTargetNumber}}hidden {{/unless}}">
+        <div class="form-fields">
+          <label for="targetNumber">{{localize "HOLLOWS_RPG.ROLL.Core.Prompt.targetNumber"}}</label>
           {{numberInput targetNumber name="targetNumber" step=1 min=1 max=20}}
         </div>
-        <div>
-          <label for="useTargetNumber">{{localize "HOLLOWS_RPG.ROLL.Core.Prompt.useTargetNumber.label"}}</label>
-          <input type="checkbox" name="useTargetNumber" {{checked useTargetNumber}}>
-        </div>
       </div>
+    {{/if}}
     <div class="form-group modifiers">
-      <button type="button" class="advantage-buttons {{#if (eq advantageMode " advantage")}}selected{{/if}}"
+      <button type="button" class="buttons {{#if (eq advantageMode "advantage")}}selected{{/if}}"
         data-action="updateAdvantageMode" data-advantagemode="advantage">
         {{#if (eq advantageMode "advantage")}}
         <span><i class="fa-solid fa-circle"></i></span>
@@ -28,7 +51,7 @@
         {{/if}}
         <span class="label">{{localize "HOLLOWS_RPG.ROLL.Core.Advantage"}}</span>
       </button>
-      <button type="button" class="advantage-buttons {{#if (eq advantageMode " disadvantage")}}selected{{/if}}"
+      <button type="button" class="buttons {{#if (eq advantageMode "disadvantage")}}selected{{/if}}"
         data-action="updateAdvantageMode" data-advantagemode="disadvantage">
         {{#if (eq advantageMode "disadvantage")}}
         <span><i class="fa-solid fa-circle"></i></span>

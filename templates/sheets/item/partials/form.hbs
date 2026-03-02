@@ -1,3 +1,36 @@
-{{formGroup systemFields.damage.fields.resolve value=system.damage.resolve disabled=isPlay}}
-{{formGroup systemFields.damage.fields.wounds value=system.damage.wounds disabled=isPlay}}
-{{formGroup systemFields.weaponLink value=system.weaponLink disabled=isPlay}}
+<fieldset class="flexcol">
+   <legend>{{localize "HOLLOWS_RPG.SHEET.Damage"}}</legend>
+    {{formGroup systemFields.damage.fields.resolve value=system.damage.resolve disabled=isPlay}}
+    {{formGroup systemFields.damage.fields.wounds value=system.damage.wounds disabled=isPlay}}
+</fieldset>
+<fieldset class="flexcol">
+   <legend>{{localize "HOLLOWS_RPG.SHEET.Resource"}}</legend>
+  {{formGroup systemFields.resource.fields.modifiesResource value=system.resource.modifiesResource disabled=isPlay}}
+  {{#if system.resource.modifiesResource}}
+    {{#if ( eq resourceType "token")}}
+      {{formGroup systemFields.resource.fields.tossable value=system.resource.tossable disabled=isPlay}}
+    {{/if}}
+    {{#if ( eq resourceType "counter")}}
+      {{formGroup systemFields.resource.fields.max value=system.resource.max disabled=isPlay}}
+    {{/if}}
+  {{/if}}
+</fieldset>
+<fieldset class="flexcol">
+<legend>{{localize "HOLLOWS_RPG.SHEET.Bonuses"}}</legend>
+  {{formGroup systemFields.bonuses.fields.stats.fields.modifiesStats value=system.bonuses.stats.modifiesStats disabled=isPlay}}
+  {{#if system.bonuses.stats.modifiesStats}}
+    {{formGroup systemFields.bonuses.fields.stats.fields.modifiedStats value=system.bonuses.stats.modifiedStats options=stats disabled=isPlay}}
+    {{#if modifiedStatsSize}}
+      <fieldset>
+        <legend>{{localize "HOLLOWS_RPG.Item.StatBonuses.label"}}</legend>
+        {{#each statBonuses as |stat|}}
+          {{formGroup stat.field.bonus value=stat.bonus disabled=@root.isPlay}}
+        {{/each}}
+      </fieldset>
+    {{/if}}
+  {{/if}}
+</fieldset>
+<fieldset class="flexcol">
+   <legend>{{localize "HOLLOWS_RPG.SHEET.Link"}}</legend>
+    {{formGroup systemFields.weaponLink value=system.weaponLink disabled=isPlay}}
+</fieldset>

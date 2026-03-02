@@ -1,4 +1,4 @@
-import { systemID, systemPath } from "../../constants.mjs";
+import { systemPath } from "../../constants.mjs";
 import DocumentInput from "../api/document-input.mjs";
 
 /**
@@ -39,8 +39,12 @@ export default class StatInput extends DocumentInput {
         };
         return obj;
       }, {});
+      context.bonuses = this.document.items.filter(i => i.system?.bonuses?.stats?.modifiedStats?.size).reduce((obj, w) => {
+        obj[w.name] = w.system.bonuses.stats.statBonuses;
+        return obj;
+      }, {})
     }
-
+    console.log(context)
     return context;
   }
 }

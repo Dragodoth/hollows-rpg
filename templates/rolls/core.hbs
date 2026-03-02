@@ -8,13 +8,10 @@
     {{target.name}}
   </div>
   {{/if}}
-  <div class="result {{result.class}}">
-    {{result.label}}
-  </div>
-  <div class="dice-result" data-tooltip-text="{{formula}}">
+  <div class="dice-result {{result.class}}" data-tooltip-text="{{formula}}">
     <div class="inline-result">
-      <div class="dice-formula">{{flavorlessFormula}}</div>
-      <div class="dice-total {{critical}}">{{total}}</div>
+      <div class="dice-formula">{{result.label}}</div>
+      <div class="dice-total">{{total}}</div>
     </div>
     {{{tooltip}}}
   </div>

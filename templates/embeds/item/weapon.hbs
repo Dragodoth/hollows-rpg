@@ -1,0 +1,90 @@
+
+<fieldset class="description" style="grid-area: 1/1/2/3;">
+  <legend>{{systemFields.description.fields.value.label}}</legend>
+  {{{enrichedDescription}}}
+</fieldset>
+<fieldset class="bonuses" style="grid-area: 1/3/2/4;">
+  <legend>{{systemFields.bonuses.label}}</legend>
+  <dl>
+      <dt class="stamina-bonus">{{systemFields.bonuses.fields.health.fields.resolve.label}}</dt>
+      <dd class="stamina-bonus">{{localize "HOLLOWS_RPG.Item.weapon.ResolveEmbed" number=(numberFormat system.bonuses.health.resolve sign=true)}}</dd>
+      <dt class="stamina-bonus">{{systemFields.bonuses.fields.health.fields.wounds.label}}</dt>
+      <dd class="stamina-bonus">{{localize "HOLLOWS_RPG.Item.weapon.WoundsEmbed" number=(numberFormat system.bonuses.health.wounds sign=true)}}</dd>
+    {{#if (and system.bonuses.statChanges.positive system.bonuses.statChanges.change)}}
+      <dt class="stamina-bonus">{{systemFields.bonuses.fields.statChanges.fields.positive.label}}</dt>
+        {{#if (eq system.bonuses.statChanges.change "both")}}
+          <dd class="stamina-bonus">
+            {{#each system.bonuses.statChanges.positive as |stat|}}
+              +1 {{localize (concat "HOLLOWS_RPG.Actor.Stat." stat)}}
+            {{/each}}
+          </dd>
+        {{else}}
+          <dd class="stamina-bonus">+2 {{localize (concat "HOLLOWS_RPG.Actor.Stat." system.bonuses.statChanges.change)}}</dd>
+        {{/if}}
+    {{/if}}
+    {{#if system.bonuses.statChanges.negative}}
+      <dt class="stamina-bonus">{{systemFields.bonuses.fields.statChanges.fields.negative.label}}</dt>
+      <dd class="stamina-bonus">-1 {{localize (concat "HOLLOWS_RPG.Actor.Stat." system.bonuses.statChanges.negative)}}</dd>
+    {{/if}}
+  </dl>
+</fieldset>
+<fieldset class="attack" style="grid-area: 2/1/3/2;">
+  {{#if system.attackAbility}}
+  <legend>{{localize "TYPES.Item.attack"}}</legend>
+    <dl>
+      <dd class="stamina-bonus">{{system.attackAbility.system.description.value}}</dd>
+    </dl>
+  {{else}}
+    <legend>{{localize "TYPES.Item.attack"}}
+      {{#unless @root.isPlay}}
+        {{#with (localize "HOLLOWS_RPG.SHEET.Add" itemName=(localize "TYPES.Item.attack")) as |addItemTooltip|}}
+          <a class="createDoc" data-action="createDoc" data-document-class="Item" data-type="attack" data-render-sheet="true" data-tooltip-text="{{addItemTooltip}}">
+          <i class="fa-solid fa-plus"></i>
+          </a>
+        {{/with}}
+      {{/unless}}
+    </legend>
+    <label>Create or Link Core Attack to this Weapon</label>
+  {{/if}}
+</fieldset>
+<fieldset class="form" style="grid-area: 2/2/3/3;">
+  {{#if system.form}}
+    <legend>{{system.form.name}} {{localize "TYPES.Item.form"}}</legend>
+    <dl>
+      <dt class="stamina-bonus">{{system.form.name}}</dt>
+      <dd class="stamina-bonus">{{system.form.system.description.enriched}}</dd>
+      <dt class="stamina-bonus">{{system.form.system.schema.fields.damage.label}}</dt>
+      <dd class="stamina-bonus">{{numberFormat system.form.system.damage.resolve}}/{{numberFormat system.form.system.damage.wounds}}</dd>
+    </dl>
+  {{else}}
+    <legend>{{localize "TYPES.Item.form"}}
+      {{#unless @root.isPlay}}
+        {{#with (localize "HOLLOWS_RPG.SHEET.Add" itemName=(localize "TYPES.Item.form")) as |addItemTooltip|}}
+          <a class="createDoc" data-action="createDoc" data-document-class="Item" data-type="form" data-render-sheet="true" data-tooltip-text="{{addItemTooltip}}">
+          <i class="fa-solid fa-plus"></i>
+          </a>
+        {{/with}}
+      {{/unless}}
+    </legend>
+    <label>Create or Link Form to this Weapon</label>
+  {{/if}}
+</fieldset>
+{{#if system.resource.hasResource}}
+  <fieldset class="resource" style="grid-area: 2/3/3/4;">
+    <legend>{{localize "HOLLOWS_RPG.Item.weapon.FIELDS.resource.label"}}: {{system.resource.name}}</legend>
+    <dl>
+      {{#if ( eq system.resource.type "token")}}
+        <dt class="stamina-bonus">{{systemFields.resource.state.label}}</dt>
+        <dd class="stamina-bonus">{{system.resource.state}}</dd>
+        <dt class="stamina-bonus">{{systemFields.resource.tossable.label}}</dt>
+        <dd class="stamina-bonus">{{system.resource.tossable}}</dd>
+      {{/if}}
+      {{#if ( eq system.resource.type "counter")}}
+        <dt class="stamina-bonus">{{systemFields.resource.value.label}}</dt>
+        <dd class="stamina-bonus">{{system.resource.value}}</dd>
+        <dt class="stamina-bonus">{{systemFields.resource.max.label}}</dt>
+        <dd class="stamina-bonus">{{system.resource.max}}</dd>
+      {{/if}}
+    </dl>
+  </fieldset>
+{{/if}}

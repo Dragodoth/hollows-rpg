@@ -1,18 +1,26 @@
 <section class="standard-form">
   <p class="hint">{{localize "HOLLOWS_RPG.Actor.hunter.StatInput.Hint"}}</p>
   <p class="hint">{{localize "HOLLOWS_RPG.Actor.hunter.StatInput.Arrays"}}</p>
-  <div class="form-group">
-    <div class="form-group stacked row-labels">
-      <span class="empty">&nbsp;</span>
+  <div class="form-group input">
+    <div class="form-group stacked row-labels" style="flex-direction: column ">
+      <span class="label">&nbsp;</span>
       <span class="label">{{localize "HOLLOWS_RPG.Actor.hunter.StatInput.Rows.Input"}}</span>
+      {{#each bonuses}}
+        <span class="label advancement">{{@key}}</span>
+      {{/each}}
     </div>
-    {{#each stats}}
-    <div class="form-group stacked">
-      <label>{{field.label}}</label>
-      <div class="form-fields">
-        {{formInput field value=value placeholder="10"}}
+    {{#each stats as |stat|}}
+      <div class="form-group stacked">
+        <label>{{stat.field.label}}</label>
+        <div class="form-fields">
+          {{formInput stat.field value=stat.value placeholder="10"}}
+        </div>
+        {{#each ../bonuses as |item|}}
+          <div class="advancement" data-tooltip="DRAW_STEEL.Actor.base.CharacteristicInput.Advancement">
+            {{numberInput (lookup (lookup item @../key) "bonus") placeholder="" disabled=true}}
+          </div>
+        {{/each}}
       </div>
-    </div>
     {{/each}}
   </div>
 </section>
