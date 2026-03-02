@@ -1,6 +1,6 @@
 This is an Unofficial system for Hollows RPG on Foundry VTT.
 
-“Hollows RPG is an independent production by [Author or Publisher] and is not affiliated with Rowan, Rook and Decard. It is published under the RR&D Community License.”
+“Hollows RPG is an independent production by Dragodoth and is not affiliated with Rowan, Rook and Decard. It is published under the RR&D Community License.”
 
 “Hollows RPG is copyright Rowan, Rook and Decard. You can find out more and support these games at `rowanrookanddecard.com`”
 
